@@ -1,32 +1,103 @@
-# B.Tech Final Year Project - Weekly Progress Tracker
+# CAMBER
+### Cognitive Assistance and Mood-Based Educational Responder
 
-Welcome to the project repository for our B.Tech Computer Science and Engineering (Artificial Intelligence) final year project. 
+CAMBER is an AI-based educational assistance system designed to provide personalized and adaptive learning support by considering the learner's emotional state.
 
-This repository is configured with an automated GitHub Actions pipeline to track development activity and generate our mandatory Weekly Progress Reports (Form-3)[cite: 1].
-
-## ⚙️ Automated Reporting Pipeline
-
-To streamline evaluations, our performance and individual contributions are evaluated strictly based on verified commits pushed to this repository[cite: 1]. 
-
-* **Automated Generation:** The GitHub Actions pipeline runs automatically every Thursday at 11:59 PM IST[cite: 1].
-* **Metrics Tracked:** The script compiles code contributions, commit logs, active working days, and net lines of code (LOC)[cite: 1].
-* **Output:** A standardized Form-3 PDF is generated and archived directly inside the `/weekly_reports` directory[cite: 1].
-
-## 📋 Guidelines for Team Members
-
-1. **Continuous Commits:** Work incrementally throughout the week[cite: 1]. Avoid pushing bulk code dumps at the deadline, as individual marks are tied to consistency and meaningful commit logs[cite: 1].
-2. **Branching:** Work on individual branches and ensure your work is merged into the `main` branch before the Thursday deadline to be included in the weekly report[cite: 1].
-3. **Weekly Submission:** Every week, download the latest compiled Form-3 PDF from the `/weekly_reports` folder and submit it to the Lab Coordinator/Project Mentor during the lab session[cite: 1].
-
-## 📂 Key Files & Directories
-
-* `generate_report.py`: The Python script responsible for analyzing git logs and rendering the Form-3 PDF[cite: 1].
-* `.github/workflows/auto_weekly_report.yml`: The GitHub Actions workflow file that schedules and executes the automation[cite: 1].
-* `/weekly_reports/`: The destination folder where all generated PDFs are permanently archived[cite: 1].
-
-## 👥 Access & Evaluation
-
-All team members, the Project Mentor, and the Lab Coordinator must have collaborator access to this repository to review code and access the generated reports[cite: 1].
+The system uses facial emotion recognition to identify the learner's current emotional state and adapts the learning experience accordingly. Based on the detected emotion, CAMBER can modify the way educational content is presented, such as simplifying explanations, providing examples, introducing interactive activities, or suggesting short breaks.
 
 ---
-*Developed by Bharat Solanki*
+
+## 📌 Problem Statement
+
+Traditional e-learning platforms mainly focus on delivering educational content without considering the learner's emotional and cognitive state.
+
+Learners may experience emotions such as confusion, boredom, stress, or lack of engagement during a learning session. If these states are not considered, the learning experience may become less effective.
+
+CAMBER aims to address this problem by integrating facial emotion recognition with an adaptive educational system to provide a more personalized and learner-centered experience.
+
+---
+
+## 🎯 Objectives
+
+- Detect the learner's facial emotional state using an AI-based emotion recognition model.
+- Provide personalized educational responses based on the detected emotional state.
+- Adapt explanations and learning activities according to the learner's current state.
+- Improve learner engagement and understanding.
+- Provide a more inclusive and learner-centered educational environment.
+- Explore the use of AI for emotion-aware adaptive learning.
+
+---
+
+## ✨ Key Features
+
+### 1. Facial Emotion Recognition
+CAMBER uses a CNN-based facial emotion recognition approach with OpenCV to analyze facial expressions and identify the learner's emotional state.
+
+### 2. Emotion-Aware Learning
+The system uses the detected emotional state as an input for adapting the learning experience.
+
+### 3. Adaptive Educational Responses
+Depending on the learner's state, the system can provide different types of support, such as:
+
+- Simplified explanations
+- Additional examples
+- Visual learning assistance
+- Interactive questions or quizzes
+- Encouragement and engagement activities
+- Short break or relaxation suggestions
+
+### 4. Personalized Learning
+CAMBER aims to provide different learning experiences for different learners based on their learning preferences and current state.
+
+### 5. Accessibility-Oriented Learning
+The system can be extended to support learners with different learning needs through features such as:
+
+- Adjustable learning pace
+- Simplified content
+- Reading assistance
+- Text-to-speech support
+- Customizable interface
+
+---
+
+## 🧠 System Workflow
+
+```text
+                ┌──────────────────────┐
+                │       Learner        │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │  Camera Input        │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │ Face Detection       │
+                │     (OpenCV)         │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │ Facial Emotion       │
+                │ Recognition (CNN)    │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │ Detected Emotional   │
+                │       State          │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │ Adaptive Response    │
+                │      Engine          │
+                └──────────┬───────────┘
+                           │
+                           ▼
+                ┌──────────────────────┐
+                │ Personalized        │
+                │ Learning Support     │
+                └──────────────────────┘
