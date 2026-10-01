@@ -1,38 +1,844 @@
-.App {
-  text-align: center;
-}
+/* ==========================================================================
+   CAMBER - EMOTION-AWARE AI STUDY COMPANION
+   Landing Page Styles (Hero, What is Camber, Why Camber)
+   ========================================================================== */
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.camber-app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: var(--camber-cream);
+  color: var(--camber-brown-text);
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   1. NAVIGATION BAR
+   ========================================================================== */
+.camber-navbar-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--camber-sky-blue);
+  box-shadow: 0 2px 12px rgba(68, 46, 32, 0.05);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.camber-navbar {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 10px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Brand & Logo */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.brand-logo-img {
+  height: 52px;
+  width: auto;
+  max-width: 130px;
+  object-fit: contain;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: drop-shadow(0 2px 4px rgba(68, 46, 32, 0.08));
+}
+
+.brand-link:hover .brand-logo-img {
+  transform: scale(1.04);
+}
+
+.navbar-cloud-decor {
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  animation: floatCloud 6s ease-in-out infinite alternate;
+}
+
+@keyframes floatCloud {
+  0% { transform: translateY(0px) translateX(0px); }
+  100% { transform: translateY(-3px) translateX(4px); }
+}
+
+/* Nav Links */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 36px;
+}
+
+.nav-link {
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--camber-brown-dark);
+  position: relative;
+  padding: 6px 2px;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #1a1009;
+}
+
+.nav-active-pill {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--camber-brown-dark);
+  border-radius: 2px;
+}
+
+/* Auth CTA Button */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-auth {
+  background-color: var(--camber-yellow-badge);
+  border: 1px solid var(--camber-yellow-border);
+  color: var(--camber-brown-dark);
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 8px 24px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(68, 46, 32, 0.06);
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.btn-auth:hover {
+  background-color: #fffdec;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(68, 46, 32, 0.1);
+}
+
+/* Hamburger button */
+.navbar-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 32px;
+  height: 26px;
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.hamburger-line {
+  width: 100%;
+  height: 3px;
+  background-color: var(--camber-brown-dark);
+  border-radius: 3px;
+  transition: all 0.25s ease-in-out;
+}
+
+.navbar-hamburger.open .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.navbar-hamburger.open .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-hamburger.open .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile Drawer */
+.mobile-drawer {
+  background-color: var(--camber-sky-blue);
+  border-top: 1px solid rgba(68, 46, 32, 0.08);
+  padding: 20px 32px 28px 32px;
+  box-shadow: 0 8px 20px rgba(68, 46, 32, 0.08);
+  animation: slideDown 0.25s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mobile-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-link {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--camber-brown-dark);
+  display: block;
+  padding: 6px 0;
+}
+
+.mobile-link.active {
+  color: #1a1009;
+  font-weight: 800;
+}
+
+.mobile-auth-item {
+  margin-top: 8px;
+}
+
+.mobile-btn-auth {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   2. SECTION 1 — HERO / HOME
+   ========================================================================== */
+.hero-section {
+  background-color: var(--camber-cream);
+  position: relative;
+  overflow: hidden;
+  padding-top: 52px;
+}
+
+.hero-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 36px 36px 36px;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: 48px;
+  position: relative;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-sprig-top {
+  margin-bottom: 12px;
+}
+
+.hero-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 4.8vw, 4.2rem);
+  line-height: 1.12;
+  color: var(--camber-brown-heading);
+  font-weight: 700;
+  margin-bottom: 22px;
+  letter-spacing: -0.015em;
+}
+
+.hero-subtext {
+  font-size: clamp(1.08rem, 1.8vw, 1.25rem);
+  line-height: 1.65;
+  color: var(--camber-brown-text);
+  margin-bottom: 36px;
+  max-width: 480px;
+  font-weight: 500;
+}
+
+.break-desktop {
+  display: inline;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Primary CTA Button (Sage Green Pill) */
+.btn-primary {
+  background-color: var(--camber-sage-dark);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 14px 34px;
+  border-radius: 9999px;
+  box-shadow: var(--shadow-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background-color: var(--camber-sage-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(111, 136, 80, 0.32);
+}
+
+.btn-dot {
+  font-size: 1.2rem;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+/* Secondary CTA Button (Warm Cream Outlined Pill) */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--camber-brown-dark);
+  border: 1.5px solid var(--camber-brown-border);
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 14px 30px;
+  border-radius: 9999px;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(68, 46, 32, 0.05);
+  border-color: var(--camber-brown-dark);
+  transform: translateY(-1px);
+}
+
+.hero-leaf-bottom {
+  margin-top: 36px;
+  opacity: 0.85;
+}
+
+/* Hero Visual (Study Window Scene) */
+.hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+.hero-artwork-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 14px 36px rgba(68, 46, 32, 0.1);
+  transition: transform 0.3s ease;
+  background-color: #faf5e8;
+}
+
+.hero-artwork-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.hero-artwork-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   3. SECTION 2 — "WHAT IS CAMBER?"
+   ========================================================================== */
+.what-section {
+  background-color: var(--camber-cream-light);
+  position: relative;
+  padding-top: 54px;
+}
+
+.what-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 36px 40px 36px;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 52px;
+  position: relative;
+  z-index: 3;
+}
+
+.what-content {
+  position: relative;
+}
+
+.section-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.3rem, 3.8vw, 3.1rem);
+  line-height: 1.2;
+  color: var(--camber-brown-heading);
+  margin-bottom: 22px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.what-description {
+  font-size: clamp(1.04rem, 1.5vw, 1.12rem);
+  line-height: 1.75;
+  color: var(--camber-brown-text);
+  max-width: 530px;
+  margin-bottom: 44px;
+  font-weight: 450;
+}
+
+/* 3 Concept Columns */
+.concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.concept-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.concept-icon-bubble {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(68, 46, 32, 0.05);
+  transition: transform 0.25s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.concept-card:hover .concept-icon-bubble {
+  transform: translateY(-3px) scale(1.04);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.concept-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--camber-brown-heading);
+  margin-bottom: 8px;
+}
+
+.concept-desc {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--camber-brown-light);
+  margin: 0;
+  font-weight: 500;
+}
+
+.what-sprig-left {
+  margin-top: 14px;
+  opacity: 0.8;
+}
+
+/* What is Camber Visual (Squirrel Reading Books) */
+.what-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.what-artwork-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 34px rgba(68, 46, 32, 0.08);
+  transition: transform 0.3s ease;
+  background-color: #fcfaf4;
+}
+
+.what-artwork-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.what-artwork-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   4. SECTION 3 — "WHY CAMBER?"
+   ========================================================================== */
+.why-section {
+  background-color: var(--camber-sage);
+  position: relative;
+  padding: 68px 0 90px 0;
+}
+
+.why-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 36px;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  gap: 56px;
+  position: relative;
+  z-index: 3;
+}
+
+.why-content {
+  position: relative;
+}
+
+.why-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.3rem, 3.8vw, 3.1rem);
+  line-height: 1.2;
+  color: var(--camber-sage-text);
+  margin-bottom: 14px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.why-subheading {
+  font-family: var(--font-sans);
+  font-size: clamp(1.15rem, 1.8vw, 1.34rem);
+  font-weight: 700;
+  color: var(--camber-sage-deep);
+  margin-bottom: 20px;
+}
+
+.why-paragraph {
+  font-size: clamp(1.02rem, 1.5vw, 1.1rem);
+  line-height: 1.72;
+  color: var(--camber-sage-subtext);
+  max-width: 440px;
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+
+.why-botanicals-left {
+  display: flex;
+  align-items: center;
+  margin-top: 18px;
+}
+
+/* Comparison Cards Container */
+.why-comparison-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  position: relative;
+}
+
+.comparison-card {
+  background-color: var(--camber-card-bg);
+  border-radius: 20px;
+  padding: 30px 24px;
+  flex: 1;
+  min-width: 210px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.comparison-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(60, 75, 45, 0.12);
+}
+
+.traditional-card {
+  border: 1px solid rgba(130, 145, 115, 0.35);
+}
+
+.camber-card {
+  border: 1.5px solid rgba(111, 136, 80, 0.45);
+}
+
+.card-header {
+  font-family: var(--font-sans);
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+
+.traditional-header {
+  color: #4c3d32;
+}
+
+.camber-header {
+  color: var(--camber-sage-text);
+  margin-bottom: 0;
+}
+
+.card-header-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.sprout-icon {
+  display: flex;
+  align-items: center;
+}
+
+.comparison-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.comparison-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.96rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.traditional-item {
+  color: #5d4d42;
+}
+
+.icon-cross {
+  color: var(--camber-red-cross);
+  font-size: 1.05rem;
+  font-weight: 800;
+  width: 18px;
+  display: inline-block;
+  text-align: center;
+}
+
+.camber-item {
+  color: #2d411b;
+}
+
+.icon-check {
+  color: var(--camber-green-check);
+  font-size: 1.15rem;
+  font-weight: 900;
+  width: 18px;
+  display: inline-block;
+  text-align: center;
+}
+
+.item-text {
+  font-weight: 600;
+}
+
+/* Arrow between cards */
+.comparison-arrow-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.arrow-desktop {
+  display: block;
+}
+
+.arrow-mobile {
+  display: none;
+}
+
+.why-sprig-right {
+  position: absolute;
+  bottom: -32px;
+  right: -10px;
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   5. RESPONSIVENESS (Desktop, Tablet, Mobile)
+   ========================================================================== */
+
+/* Tablet & Smaller Desktops */
+@media (max-width: 1040px) {
+  .hero-container,
+  .what-container,
+  .why-container {
+    gap: 36px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .camber-navbar {
+    padding: 10px 24px;
+  }
+
+  .navbar-links {
+    gap: 24px;
+  }
+
+  .concepts-grid {
+    gap: 16px;
+  }
+
+  .comparison-card {
+    padding: 24px 18px;
   }
 }
+
+/* Mobile & Small Tablets */
+@media (max-width: 860px) {
+  /* Navbar */
+  .navbar-links,
+  .navbar-actions .btn-auth {
+    display: none;
+  }
+
+  .navbar-hamburger {
+    display: flex;
+  }
+
+  /* Section 1 Hero */
+  .hero-section {
+    padding-top: 36px;
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    text-align: center;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-subtext {
+    max-width: 100%;
+  }
+
+  .break-desktop {
+    display: none;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-leaf-bottom {
+    margin-top: 20px;
+  }
+
+  .hero-artwork-wrapper {
+    max-width: 500px;
+  }
+
+  /* Section 2 What is Camber */
+  .what-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .what-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .what-description {
+    max-width: 100%;
+  }
+
+  .concepts-grid {
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .concept-card {
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Section 3 Why Camber */
+  .why-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .why-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .why-paragraph {
+    max-width: 100%;
+  }
+
+  .why-botanicals-left {
+    justify-content: center;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 640px) {
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .concepts-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .concept-icon-bubble {
+    width: 72px;
+    height: 72px;
+  }
+
+  /* Stack comparison cards vertically on small phones */
+  .why-comparison-wrapper {
+    flex-direction: column;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    gap: 16px;
+  }
+
+  .comparison-card {
+    width: 100%;
+  }
+
+  .arrow-desktop {
+    display: none;
+  }
+
+  .arrow-mobile {
+    display: block;
+  }
+
+  .why-sprig-right {
+    display: none;
+  }
+}
+
