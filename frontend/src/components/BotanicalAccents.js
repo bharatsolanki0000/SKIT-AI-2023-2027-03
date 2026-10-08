@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * Botanical sprigs, leaves, and wildflower accents matching the cozy,
+ * Botanical sprigs, leaves, wildflowers, and butterfly accents matching the cozy,
  * hand-painted watercolor theme of Camber.
  */
 
@@ -84,6 +84,113 @@ export function ButtercupFlower({ size = 26, style = {}, className = '' }) {
   );
 }
 
+export function DaisyFlower({ size = 24, style = {}, className = '' }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`botanical-daisy ${className}`}
+      style={{ display: 'inline-block', ...style }}
+      aria-hidden="true"
+    >
+      {/* White watercolor daisy petals */}
+      {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
+        <ellipse
+          key={i}
+          cx={16 + 7 * Math.cos((angle * Math.PI) / 180)}
+          cy={16 + 7 * Math.sin((angle * Math.PI) / 180)}
+          rx="3.5"
+          ry="5.5"
+          transform={`rotate(${angle} ${16 + 7 * Math.cos((angle * Math.PI) / 180)} ${16 + 7 * Math.sin((angle * Math.PI) / 180)})`}
+          fill="#FFFDF7"
+          stroke="#E6DFD1"
+          strokeWidth="0.6"
+          opacity="0.95"
+        />
+      ))}
+      {/* Warm golden center */}
+      <circle cx="16" cy="16" r="4.8" fill="#F4B841" />
+      <circle cx="15.5" cy="15.5" r="2.2" fill="#FDE18A" opacity="0.8" />
+    </svg>
+  );
+}
+
+export function WildflowerStem({ size = 36, style = {}, className = '', color = '#6F8850' }) {
+  return (
+    <svg
+      width={size}
+      height={size * 1.3}
+      viewBox="0 0 32 42"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`botanical-stem ${className}`}
+      style={{ display: 'inline-block', ...style }}
+      aria-hidden="true"
+    >
+      {/* Slender curved stem */}
+      <path
+        d="M12 40 C14 30 18 20 22 6"
+        stroke={color}
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      {/* Little green leaves */}
+      <path d="M14 30 C10 28 8 32 10 34 C13 34 14 31 14 30 Z" fill={color} opacity="0.8" />
+      <path d="M17 22 C22 20 23 25 20 26 C18 26 17 23 17 22 Z" fill={color} opacity="0.8" />
+      <path d="M19 14 C16 11 13 14 15 16 C17 17 19 15 19 14 Z" fill={color} opacity="0.8" />
+      {/* Blossom 1 (yellow) */}
+      <circle cx="23" cy="5" r="3.2" fill="#F8DE7E" />
+      <circle cx="23" cy="5" r="1.5" fill="#E6A838" />
+      {/* Blossom 2 (white/cream) */}
+      <circle cx="28" cy="12" r="2.5" fill="#FFFBF0" stroke="#E2D8C3" strokeWidth="0.5" />
+      <circle cx="28" cy="12" r="1.1" fill="#F6C358" />
+    </svg>
+  );
+}
+
+export function ButterflyAccent({ size = 22, style = {}, className = '' }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`botanical-butterfly ${className}`}
+      style={{ display: 'inline-block', ...style }}
+      aria-hidden="true"
+    >
+      {/* Left wings */}
+      <path
+        d="M12 12 C9 7 4 7 5 11 C6 14 10 13 12 12 Z"
+        fill="#F5C754"
+        opacity="0.9"
+      />
+      <path
+        d="M12 12 C8 13 6 18 9 19 C11 19 12 15 12 12 Z"
+        fill="#EAA832"
+        opacity="0.85"
+      />
+      {/* Right wings */}
+      <path
+        d="M12 12 C15 7 20 7 19 11 C18 14 14 13 12 12 Z"
+        fill="#F5C754"
+        opacity="0.9"
+      />
+      <path
+        d="M12 12 C16 13 18 18 15 19 C13 19 12 15 12 12 Z"
+        fill="#EAA832"
+        opacity="0.85"
+      />
+      {/* Tiny body */}
+      <line x1="12" y1="9" x2="12" y2="17" stroke="#684E38" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function FloatingLeaf({ size = 22, style = {}, color = '#768d5a', rotate = 0 }) {
   return (
     <svg
@@ -114,4 +221,3 @@ export function FloatingLeaf({ size = 22, style = {}, color = '#768d5a', rotate 
     </svg>
   );
 }
-

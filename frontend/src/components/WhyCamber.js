@@ -1,5 +1,6 @@
 import React from 'react';
 import { BotanicalSprig, ButtercupFlower, FloatingLeaf } from './BotanicalAccents';
+import TornDivider from './TornDivider';
 
 export default function WhyCamber() {
   const traditionalPoints = [
@@ -131,6 +132,9 @@ export default function WhyCamber() {
           </div>
         </div>
       </div>
+
+      {/* Handcrafted torn paper edge transition to Features section */}
+      <TornDivider fill="#FAF4E8" height={38} />
     </section>
   );
 }

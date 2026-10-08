@@ -8,9 +8,9 @@ export default function Navbar() {
   const navLinks = [
     { id: 'home', label: 'Home', href: '#home' },
     { id: 'about', label: 'About', href: '#what-is-camber' },
-    { id: 'features', label: 'Features', href: '#why-camber' },
-    { id: 'how-it-works', label: 'How It Works', href: '#what-is-camber' },
-    { id: 'faq', label: 'FAQ', href: '#why-camber' },
+    { id: 'features', label: 'Features', href: '#features' },
+    { id: 'how-it-works', label: 'How It Works', href: '#how-it-works' },
+    { id: 'faq', label: 'FAQ', href: '#faq' },
   ];
 
   const handleNavClick = (id, href) => {
