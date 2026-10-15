@@ -1,0 +1,54 @@
+{
+  "manifest_version": 3,
+  "name": "CAMBER – Emotion-Aware Study Companion",
+  "version": "1.0.0",
+  "description": "A cozy woodland study companion that helps you understand learning material, generate quizzes, take calming breaks, and reflect on your emotions.",
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "CAMBER Study Companion",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "contextMenus",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/camber-logo.png",
+        "assets/squirrel-reading.png",
+        "assets/squirrel-resting.png",
+        "assets/squirrel-peeking.png",
+        "assets/icon16.png",
+        "assets/icon32.png",
+        "assets/icon48.png",
+        "assets/icon128.png"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

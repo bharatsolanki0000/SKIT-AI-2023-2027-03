@@ -1,0 +1,173 @@
+/* CAMBER In-Page Study Tools Floating Widget Styles */
+
+#camber-floating-trigger {
+  position: absolute;
+  z-index: 2147483640;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #24574F;
+  color: #FFFDF5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 16px rgba(36, 75, 67, 0.25);
+  cursor: pointer;
+  border: 1px solid rgba(220, 235, 214, 0.4);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease;
+  user-select: none;
+  animation: camberPopIn 0.2s ease-out;
+}
+
+#camber-floating-trigger:hover {
+  transform: translateY(-2px) scale(1.03);
+  background-color: #1E4740;
+}
+
+#camber-floating-trigger img {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: block;
+}
+
+/* Floating Study Tools Modal (Matching Reference Panel) */
+#camber-floating-panel {
+  position: absolute;
+  z-index: 2147483645;
+  width: 250px;
+  background-color: #FFFDF5;
+  border: 1.5px solid #E5E1D4;
+  border-radius: 18px;
+  padding: 14px 16px;
+  box-shadow: 0 12px 32px rgba(36, 75, 67, 0.15);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  color: #244B43;
+  animation: camberFadeScale 0.2s ease-out;
+}
+
+.camber-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #E5E1D4;
+}
+
+.camber-panel-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.camber-panel-logo {
+  width: 26px;
+  height: auto;
+}
+
+.camber-panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #24574F;
+  letter-spacing: 0.02em;
+}
+
+.camber-panel-close {
+  background: transparent;
+  border: none;
+  color: #7E6B5C;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.camber-panel-close:hover {
+  color: #244B43;
+  background-color: #F7F4E9;
+}
+
+.camber-panel-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.camber-panel-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #F7F4E9;
+  border: 1px solid rgba(229, 225, 212, 0.6);
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #244B43;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.camber-panel-item:hover {
+  background-color: #DCE8D6;
+  border-color: #718F73;
+  transform: translateX(2px);
+}
+
+.camber-item-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* Floating feedback toast */
+#camber-feedback-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #FFFDF5;
+  color: #244B43;
+  border: 1.5px solid #718F73;
+  border-radius: 16px;
+  padding: 12px 18px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 10px 28px rgba(36, 75, 67, 0.18);
+  animation: camberSlideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  max-width: 320px;
+}
+
+#camber-feedback-toast img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+@keyframes camberPopIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes camberFadeScale {
+  from { opacity: 0; transform: translateY(6px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes camberSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}

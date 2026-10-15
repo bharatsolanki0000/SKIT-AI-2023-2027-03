@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAMBER</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="camber-popup-wrapper">
+    <!-- Top Persistent Brand Header -->
+    <header class="popup-header">
+      <div class="header-brand" id="btn-header-home" role="button" tabindex="0" title="Go to Home">
+        <img src="assets/camber-logo.png" alt="CAMBER Mascot" class="header-mascot" />
+        <div class="header-titles">
+          <span class="brand-name">CAMBER</span>
+          <span class="brand-tagline">Learn &bull; Grow &bull; You</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="icon-btn" id="btn-nav-settings" title="Settings" aria-label="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+        <button type="button" class="icon-btn" id="btn-popup-close" title="Close" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Views Container -->
+    <main class="popup-body">
+
+      <!-- ============================================================
+           VIEW 1: START SESSION (Default)
+           ============================================================ -->
+      <section id="view-start" class="view-panel active">
+        <div class="greeting-section">
+          <div class="greeting-text">
+            <h1 class="greeting-heading">Hi there!</h1>
+            <p class="greeting-subtext">Ready to make your study time more effective?</p>
+          </div>
+          <div class="botanical-sprout" aria-hidden="true">
+            <svg width="38" height="38" viewBox="0 0 32 32" fill="none">
+              <path d="M16 26 V14" stroke="#718F73" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M16 18 C11 18 8 13 8 9 C12 9 16 12 16 18 Z" fill="#718F73"/>
+              <path d="M16 15 C20 15 24 11 23 7 C19 7 16 10 16 15 Z" fill="#8BB560"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Primary Action Button -->
+        <button type="button" class="btn-primary-start" id="btn-start-session">
+          <span class="btn-play-circle" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <polygon points="3,1 11,6 3,11"></polygon>
+            </svg>
+          </span>
+          <span>Start Learning Session</span>
+        </button>
+
+        <!-- Secondary Menu Rows -->
+        <div class="menu-list">
+          <button type="button" class="menu-row-item" id="btn-goto-tools">
+            <div class="menu-item-left">
+              <span class="menu-icon-bubble">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+              </span>
+              <span class="menu-label">Study Tools</span>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <button type="button" class="menu-row-item" id="btn-goto-progress">
+            <div class="menu-item-left">
+              <span class="menu-icon-bubble">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </span>
+              <span class="menu-label">My Progress</span>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <button type="button" class="menu-row-item" id="btn-goto-settings-row">
+            <div class="menu-item-left">
+              <span class="menu-icon-bubble">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+              </span>
+              <span class="menu-label">Settings</span>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+        </div>
+
+        <!-- Bottom Woodland Foliage & Peeking Mascot -->
+        <div class="start-bottom-decor">
+          <div class="grass-foliage-left" aria-hidden="true">
+            <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+              <path d="M0 40 C10 25 18 15 24 5 C26 20 22 35 20 40 Z" fill="#8BB560" opacity="0.8"/>
+              <path d="M12 40 C20 28 30 18 38 12 C36 26 30 36 28 40 Z" fill="#718F73" opacity="0.9"/>
+              <path d="M25 40 C32 30 42 22 50 18 C46 30 40 38 38 40 Z" fill="#8BB560" opacity="0.75"/>
+            </svg>
+          </div>
+          <div class="peeking-squirrel-container">
+            <img src="assets/squirrel-peeking.png" alt="Camber squirrel peeking" class="peeking-squirrel-img" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 2: ACTIVE SESSION
+           ============================================================ -->
+      <section id="view-active" class="view-panel">
+        <!-- Live Status Bar -->
+        <div class="session-status-bar">
+          <div class="session-active-badge">
+            <span class="status-pulse-dot" aria-hidden="true"></span>
+            <span class="status-badge-text">Session Active</span>
+          </div>
+          <div class="session-timer-display" id="session-timer">00:00:00</div>
+          <button type="button" class="btn-end-session" id="btn-end-session" title="End Session">End</button>
+        </div>
+
+        <h2 class="view-heading-prompt">How can I help you today?</h2>
+
+        <!-- Four Assistance Option Cards -->
+        <div class="assistance-grid">
+          <button type="button" class="assistance-card" id="btn-opt-explain">
+            <div class="assist-card-left">
+              <div class="assist-icon-circle icon-bg-yellow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D19828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18h6"></path>
+                  <path d="M10 22h4"></path>
+                  <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path>
+                </svg>
+              </div>
+              <div class="assist-card-text">
+                <div class="assist-title">Explain Simply</div>
+                <div class="assist-desc">Get an easier explanation</div>
+              </div>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <button type="button" class="assistance-card" id="btn-opt-quiz">
+            <div class="assist-card-left">
+              <div class="assist-icon-circle icon-bg-green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5D8545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
+              <div class="assist-card-text">
+                <div class="assist-title">Generate Quiz</div>
+                <div class="assist-desc">Test your understanding</div>
+              </div>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <button type="button" class="assistance-card" id="btn-opt-break">
+            <div class="assist-card-left">
+              <div class="assist-icon-circle icon-bg-blue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#507B9E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                  <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                  <line x1="6" y1="1" x2="6" y2="4"></line>
+                  <line x1="10" y1="1" x2="10" y2="4"></line>
+                  <line x1="14" y1="1" x2="14" y2="4"></line>
+                </svg>
+              </div>
+              <div class="assist-card-text">
+                <div class="assist-title">Take a Break</div>
+                <div class="assist-desc">Rest and recharge</div>
+              </div>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <button type="button" class="assistance-card" id="btn-opt-emotion">
+            <div class="assist-card-left">
+              <div class="assist-icon-circle icon-bg-peach">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B86A50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </div>
+              <div class="assist-card-text">
+                <div class="assist-title">Emotion Check</div>
+                <div class="assist-desc">How are you feeling?</div>
+              </div>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+        </div>
+
+        <!-- Encouragement Banner with Sprout & Squirrel -->
+        <div class="encouragement-banner">
+          <div class="banner-sprout-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 20 V11" stroke="#718F73" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 14 C8 14 6 10 6 7 C9 7 12 9 12 14 Z" fill="#718F73"/>
+              <path d="M12 12 C15 12 18 9 17 6 C14 6 12 8 12 12 Z" fill="#8BB560"/>
+            </svg>
+          </div>
+          <div class="banner-text">
+            <div class="banner-title">You're doing great!</div>
+            <div class="banner-subtext">Small steps lead to big progress.</div>
+          </div>
+          <img src="assets/squirrel-peeking.png" alt="Camber mascot" class="banner-squirrel" />
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 3: EXPLANATION RESULT
+           ============================================================ -->
+      <section id="view-explain" class="view-panel">
+        <div class="subview-nav">
+          <button type="button" class="btn-subview-back" id="btn-back-from-explain">
+            &larr; Back to Session
+          </button>
+        </div>
+
+        <!-- Result Summary Card -->
+        <div class="explain-summary-card">
+          <div class="explain-icon-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D19828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18h6"></path>
+              <path d="M10 22h4"></path>
+              <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path>
+            </svg>
+          </div>
+          <div class="explain-summary-text">
+            <h2 class="explain-title">Explained Simply</h2>
+            <div class="context-pill" id="explain-context-pill">From your selected text</div>
+          </div>
+        </div>
+
+        <!-- Explanation Body -->
+        <div class="explain-body-card">
+          <div class="source-text-block" id="explain-source-text">
+            A stack is a data structure that follows the <u>Last In, First Out (LIFO)</u> principle.
+          </div>
+          <div class="simplified-text-block" id="explain-simplified-text">
+            This means the last item added is the first one removed.
+          </div>
+        </div>
+
+        <!-- Key Points Card -->
+        <div class="key-points-card">
+          <h3 class="key-points-heading">Key Points:</h3>
+          <ul class="key-points-list" id="explain-key-points">
+            <li>
+              <span class="check-icon" aria-hidden="true">&#10003;</span>
+              <span>Only the top element can be accessed.</span>
+            </li>
+            <li>
+              <span class="check-icon" aria-hidden="true">&#10003;</span>
+              <span>You can only add or remove from the top.</span>
+            </li>
+            <li>
+              <span class="check-icon" aria-hidden="true">&#10003;</span>
+              <span>Used in functions, undo operations, and recursion.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Bottom Supportive Note -->
+        <div class="supportive-note-card">
+          <div class="note-sprout" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 20 V11" stroke="#718F73" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 14 C8 14 6 10 6 7 C9 7 12 9 12 14 Z" fill="#718F73"/>
+            </svg>
+          </div>
+          <div class="note-text-wrap">
+            <div class="note-main">Take your time.</div>
+            <div class="note-sub">You're learning, and that's what matters!</div>
+          </div>
+          <img src="assets/squirrel-peeking.png" alt="Camber mascot" class="note-mascot-img" />
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 4: QUIZ INTERFACE
+           ============================================================ -->
+      <section id="view-quiz" class="view-panel">
+        <div class="subview-nav">
+          <button type="button" class="btn-subview-back" id="btn-back-from-quiz">
+            &larr; Back
+          </button>
+        </div>
+
+        <!-- Quiz Progress Bar -->
+        <div class="quiz-status-header">
+          <div class="quiz-step-badge">
+            <span class="quiz-sprout-icon" aria-hidden="true">🌿</span>
+            <span id="quiz-progress-text">1/3</span>
+          </div>
+          <div class="quiz-pill-badge">Quiz</div>
+        </div>
+
+        <!-- Question -->
+        <div class="quiz-question-box">
+          <h2 class="quiz-question-text" id="quiz-question-title">What is the main characteristic of a stack?</h2>
+        </div>
+
+        <!-- 4 Answer Options -->
+        <div class="quiz-options-list" id="quiz-options-container">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Quiz Feedback Box -->
+        <div class="quiz-feedback-box" id="quiz-feedback" style="display: none;"></div>
+
+        <!-- Primary Action -->
+        <button type="button" class="btn-primary-start" id="btn-quiz-next">Next &rarr;</button>
+      </section>
+
+      <!-- ============================================================
+           VIEW 5: BREAK SUGGESTION
+           ============================================================ -->
+      <section id="view-break" class="view-panel">
+        <div class="subview-nav">
+          <button type="button" class="btn-subview-back" id="btn-back-from-break">
+            &larr; Back to Session
+          </button>
+        </div>
+
+        <div class="break-scene-wrapper">
+          <img src="assets/squirrel-resting.png" alt="Camber squirrel resting peacefully in the grass" class="break-scene-img" />
+        </div>
+
+        <div class="break-content-wrap">
+          <h2 class="break-heading">You seem a little tired</h2>
+          <p class="break-subtext">It's okay to take a break! A short rest can help you focus and remember better.</p>
+
+          <div id="break-timer-display" class="break-timer-card" style="display: none;">
+            <div class="timer-countdown" id="break-countdown">05:00</div>
+            <div class="timer-note">Resting your eyes... breathe deeply.</div>
+          </div>
+
+          <button type="button" class="btn-break-action" id="btn-start-break">
+            <span class="break-mug-icon" aria-hidden="true">☕</span>
+            <span id="break-btn-label">Take a 5-minute Break</span>
+          </button>
+
+          <button type="button" class="btn-break-secondary" id="btn-break-later">
+            Maybe later
+          </button>
+        </div>
+
+        <!-- Subtle corner leaf sprigs -->
+        <div class="break-corner-decor" aria-hidden="true">
+          <svg width="40" height="30" viewBox="0 0 40 30" fill="none">
+            <path d="M2 30 C8 18 16 10 24 4" stroke="#8BB560" stroke-width="2" stroke-linecap="round"/>
+            <path d="M10 20 C6 17 8 13 12 14 C13 18 11 20 10 20 Z" fill="#718F73"/>
+            <path d="M18 12 C15 9 17 5 21 6 C22 10 19 12 18 12 Z" fill="#8BB560"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 6: STUDY TOOLS
+           ============================================================ -->
+      <section id="view-tools" class="view-panel">
+        <div class="subview-nav">
+          <button type="button" class="btn-subview-back" id="btn-back-from-tools">
+            &larr; Back
+          </button>
+        </div>
+
+        <h2 class="view-heading-prompt">Study Tools</h2>
+
+        <!-- Captured Selection Panel -->
+        <div class="tools-selection-panel">
+          <div class="tools-panel-header">
+            <span class="tools-panel-title">Captured Webpage Notes</span>
+            <button type="button" class="btn-refresh-selection" id="btn-refresh-selection" title="Fetch selection from active tab">&#8635; Fetch</button>
+          </div>
+          <textarea id="tools-input-text" class="tools-textarea" placeholder="Highlight any text on a webpage or type your study notes here..."></textarea>
+          
+          <div class="tools-actions-row">
+            <button type="button" class="btn-tool-pill" id="btn-tool-explain">💡 Explain Simply</button>
+            <button type="button" class="btn-tool-pill" id="btn-tool-quiz">📄 Generate Quiz</button>
+          </div>
+        </div>
+
+        <!-- Browser Mockup Demonstration from Reference Board -->
+        <div class="browser-mockup-card">
+          <div class="browser-mockup-top">
+            <span class="browser-dot red"></span>
+            <span class="browser-dot yellow"></span>
+            <span class="browser-dot green"></span>
+            <span class="browser-tab-title">Data Structures - Lecture Notes</span>
+          </div>
+          <div class="browser-mockup-content">
+            <h4 class="mockup-heading">What is a Stack?</h4>
+            <p class="mockup-text">
+              <mark class="mockup-highlight">A stack is a data structure that follows the Last In, First Out (LIFO) principle.</mark>
+              This means the last item added is the first one removed.
+            </p>
+            <div class="mockup-hint">
+              <span>Tip: Highlight text on any website to see the floating CAMBER companion!</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 7: MY PROGRESS
+           ============================================================ -->
+      <section id="view-progress" class="view-panel">
+        <div class="subview-nav">
+          <button type="button" class="btn-subview-back" id="btn-back-from-progress">
+            &larr; Back
+          </button>
+        </div>
+
+        <h2 class="view-heading-prompt">My Progress</h2>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="stat-study-time">42m</div>
+            <div class="stat-label">Total Study Time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-quizzes-taken">3</div>
+            <div class="stat-label">Quizzes Completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-accuracy">100%</div>
+            <div class="stat-label">Quiz Accuracy</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-breaks-taken">1</div>
+            <div class="stat-label">Restful Breaks</div>
+          </div>
+        </div>
+
+        <div class="progress-encouragement-card">
+          <div class="encouragement-sprout-icon" aria-hidden="true">🌱</div>
+          <p class="encouragement-quote">"Knowledge grows like a tree — ring by ring, day by day."</p>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 8: EMOTION CHECK
+           ============================================================ -->
+      <section id="view-emotion" class="view-panel">
+        <div class="subview-nav">
+          <button type="button" class="btn-subview-back" id="btn-back-from-emotion">
+            &larr; Back to Session
+          </button>
+        </div>
+
+        <h2 class="view-heading-prompt">How are you feeling?</h2>
+        <p class="emotion-subtext">Camber adapts your study journey to your energy.</p>
+
+        <div class="mood-selector-grid">
+          <button type="button" class="mood-btn" data-mood="focused">
+            <span class="mood-emoji">🌿</span>
+            <span class="mood-name">Focused</span>
+          </button>
+          <button type="button" class="mood-btn" data-mood="calm">
+            <span class="mood-emoji">☕</span>
+            <span class="mood-name">Calm</span>
+          </button>
+          <button type="button" class="mood-btn" data-mood="curious">
+            <span class="mood-emoji">☀️</span>
+            <span class="mood-name">Curious</span>
+          </button>
+          <button type="button" class="mood-btn" data-mood="tired">
+            <span class="mood-emoji">🌙</span>
+            <span class="mood-name">Tired</span>
+          </button>
+          <button type="button" class="mood-btn" data-mood="overwhelmed">
+            <span class="mood-emoji">🌧️</span>
+            <span class="mood-name">Overwhelmed</span>
+          </button>
+        </div>
+
+        <div class="mood-feedback-card" id="mood-feedback-box" style="display: none;">
+          <div class="mood-feedback-title" id="mood-feedback-title"></div>
+          <div class="mood-feedback-desc" id="mood-feedback-desc"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 9: EXTENSION SETTINGS
+           ============================================================ -->
+      <section id="view-settings" class="view-panel">
+        <div class="subview-nav">
+          <button type="button" class="btn-subview-back" id="btn-back-from-settings">
+            &larr; Back
+          </button>
+        </div>
+
+        <h2 class="view-heading-prompt">Extension Settings</h2>
+
+        <div class="settings-menu-list">
+          <!-- 1. Account -->
+          <button type="button" class="settings-row-item" id="btn-setting-account">
+            <div class="settings-item-left">
+              <span class="settings-icon-bubble">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <div class="settings-text-block">
+                <div class="settings-row-title">Account</div>
+                <div class="settings-row-subtitle">View your profile</div>
+              </div>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <!-- 2. Permissions -->
+          <button type="button" class="settings-row-item" id="btn-setting-permissions">
+            <div class="settings-item-left">
+              <span class="settings-icon-bubble">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </span>
+              <div class="settings-text-block">
+                <div class="settings-row-title">Permissions</div>
+                <div class="settings-row-subtitle">Manage site access</div>
+              </div>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+
+          <!-- 3. Notifications -->
+          <div class="settings-row-item no-chevron" id="btn-setting-notifications">
+            <div class="settings-item-left">
+              <span class="settings-icon-bubble">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+              </span>
+              <div class="settings-text-block">
+                <div class="settings-row-title">Notifications</div>
+                <div class="settings-row-subtitle">Get updates and reminders</div>
+              </div>
+            </div>
+            <label class="camber-toggle-switch" aria-label="Toggle notifications">
+              <input type="checkbox" id="toggle-notifications" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- 4. About CAMBER -->
+          <button type="button" class="settings-row-item" id="btn-setting-about">
+            <div class="settings-item-left">
+              <span class="settings-icon-bubble">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </span>
+              <div class="settings-text-block">
+                <div class="settings-row-title">About CAMBER</div>
+                <div class="settings-row-subtitle">Version 1.0.0</div>
+              </div>
+            </div>
+            <span class="chevron-right" aria-hidden="true">&rsaquo;</span>
+          </button>
+        </div>
+
+        <!-- Detail Modal for Account, Permissions, About -->
+        <div id="settings-detail-modal" class="settings-modal" style="display: none;">
+          <div class="modal-card">
+            <div class="modal-header">
+              <h3 id="modal-title" class="modal-title">Settings Detail</h3>
+              <button type="button" class="modal-close-btn" id="btn-close-modal">&times;</button>
+            </div>
+            <div id="modal-content" class="modal-content"></div>
+          </div>
+        </div>
+
+        <!-- Bottom Thoughtful Footer Note -->
+        <div class="settings-bottom-note">
+          <div class="settings-sprout" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 20 V11" stroke="#718F73" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 14 C8 14 6 10 6 7 C9 7 12 9 12 14 Z" fill="#718F73"/>
+              <path d="M12 12 C15 12 18 9 17 6 C14 6 12 8 12 12 Z" fill="#8BB560"/>
+            </svg>
+          </div>
+          <span class="settings-quote">Learning is a journey, not a destination.</span>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
