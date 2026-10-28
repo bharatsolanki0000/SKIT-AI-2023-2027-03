@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import camberLogo from '../assets/camber-logo.png';
 
-export default function Navbar() {
+export default function Navbar({ onNavigate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeNav, setActiveNav] = useState('home');
 
@@ -19,6 +19,16 @@ export default function Navbar() {
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleAuthClick = (path = '/login') => {
+    setMobileMenuOpen(false);
+    if (onNavigate) {
+      onNavigate(path);
+    } else {
+      window.history.pushState({}, '', path);
+      window.dispatchEvent(new PopStateEvent('popstate'));
     }
   };
 
@@ -78,9 +88,7 @@ export default function Navbar() {
           <button
             type="button"
             className="btn-auth"
-            onClick={() => {
-              alert('Sign up / Sign in will be available soon!');
-            }}
+            onClick={() => handleAuthClick('/login')}
           >
             Sign up / Sign in
           </button>
@@ -122,10 +130,7 @@ export default function Navbar() {
               <button
                 type="button"
                 className="btn-auth mobile-btn-auth"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  alert('Sign up / Sign in will be available soon!');
-                }}
+                onClick={() => handleAuthClick('/login')}
               >
                 Sign up / Sign in
               </button>
@@ -136,4 +141,3 @@ export default function Navbar() {
     </header>
   );
 }
-

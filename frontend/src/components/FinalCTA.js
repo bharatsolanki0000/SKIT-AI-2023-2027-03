@@ -2,13 +2,18 @@ import React from 'react';
 import ctaSquirrelImg from '../assets/cta-squirrel.png';
 import { DaisyFlower, ButtercupFlower } from './BotanicalAccents';
 
-export default function FinalCTA() {
+export default function FinalCTA({ onNavigate }) {
   const handleGetStarted = () => {
-    const heroEl = document.querySelector('#home');
-    if (heroEl) {
-      heroEl.scrollIntoView({ behavior: 'smooth' });
+    if (onNavigate) {
+      onNavigate('/signup');
     } else {
-      alert('Welcome to Camber! Sign up will be available soon.');
+      const heroEl = document.querySelector('#home');
+      if (heroEl) {
+        heroEl.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.history.pushState({}, '', '/signup');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }
     }
   };
 
@@ -33,7 +38,7 @@ export default function FinalCTA() {
             className="btn-cta-start"
             onClick={handleGetStarted}
           >
-            Get Started <span className="cta-arrow" aria-hidden="true">→</span>
+            Get Started <span className="cta-arrow" aria-hidden="true">&rarr;</span>
           </button>
         </div>
 
@@ -46,4 +51,3 @@ export default function FinalCTA() {
     </section>
   );
 }
-
