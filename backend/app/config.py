@@ -12,6 +12,10 @@ class Settings:
     FIREBASE_WEB_API_KEY: str = os.getenv("FIREBASE_WEB_API_KEY", "")
     FIREBASE_CREDENTIALS_PATH: str = os.getenv("FIREBASE_CREDENTIALS_PATH", "")
 
+    # MongoDB Database Settings (Sprint 1)
+    MONGODB_URI: str = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
+    MONGODB_DATABASE: str = os.getenv("MONGODB_DATABASE", "camber_db")
+
     # Clean up formatted newlines in private key
     @property
     def FIREBASE_PRIVATE_KEY(self) -> str:

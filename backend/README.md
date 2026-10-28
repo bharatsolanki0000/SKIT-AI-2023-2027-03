@@ -1,8 +1,8 @@
-# CAMBER Backend - Authentication Module
+# CAMBER Backend - Core Services & Data Models
 
 Cognitive Assistance and Mood-Based Educational Responder (CAMBER) API Backend.
 
-This module provides backend authentication services built using **FastAPI**, **Firebase Authentication**, and **Firebase Firestore**.
+This module provides backend authentication services built using **FastAPI** and **Firebase Authentication**, alongside validated **MongoDB** domain models and schemas for Sprint 1.
 
 ---
 
@@ -13,16 +13,17 @@ backend/
 ├── app/
 │   ├── __init__.py          # Application package declaration
 │   ├── main.py              # FastAPI entry point, CORS, and router registration
-│   ├── config.py            # Environment configuration loader
+│   ├── config.py            # Environment configuration loader (Firebase & MongoDB)
 │   ├── firebase.py          # Firebase Admin SDK & Auth REST API integration
-│   ├── schemas.py           # Pydantic data schemas for requests and responses
+│   ├── schemas.py           # Pydantic v2 schemas: Auth & MongoDB Collections
 │   ├── dependencies.py      # Reusable authentication dependency (get_current_user)
 │   └── routes/
 │       ├── __init__.py      # Routes package declaration
 │       └── auth.py          # /auth/signup, /auth/login, /auth/me endpoints
 ├── tests/
-│   ├── __init__.py      # Test package declaration
-│   └── test_auth.py     # Unit and integration test suite
+│   ├── __init__.py          # Test package declaration
+│   ├── test_auth.py         # Authentication endpoint unit and integration tests
+│   └── test_schemas.py      # Sprint 1 MongoDB schema validation test suite
 ├── .env.example             # Environment variable template
 ├── .gitignore               # Secrets and build artifact ignore rules
 ├── requirements.txt         # Backend Python dependencies
@@ -31,11 +32,36 @@ backend/
 
 ---
 
+## 🍃 MongoDB Schema Design (Sprint 1)
+
+Detailed collection specifications, entity relationships, BSON data types, index definitions, and privacy rules are documented in:
+👉 [`docs/database-schema.md`](../docs/database-schema.md)
+
+### Collections Summary:
+1. **`users`**:
+   - Primary key: `_id` (`ObjectId`)
+   - Identity: `email` (unique index), `auth_provider_uid` (Firebase UID, unique index)
+   - Metadata: `display_name`, `auth_provider` (`"firebase"`), `is_active`, `created_at`, `updated_at`
+2. **`learner_profiles`**:
+   - Primary key: `_id` (`ObjectId`)
+   - Ownership: `user_id` (unique index enforcing 1:1 relationship)
+   - Pedagogical preferences: `learning_goals`, `preferred_explanation_style` (`"simple"`, `"detailed"`, `"visual"`, `"analogy"`, `"step_by_step"`)
+   - Embedded preferences: `study_preferences`, `attention_preferences`, `accessibility_settings`
+3. **`study_sessions`**:
+   - Primary key: `_id` (`ObjectId`)
+   - Session lifecycle: `user_id`, `started_at`, `ended_at`, `status` (`"active"`, `"completed"`, `"paused"`, `"abandoned"`)
+   - Bounded emotion inference events: `emotion_events` (max 500 items, validated DAISEE classes: `confused`, `focused`, `frustrated`, `bored`, `drowsy`, `looking_away`, confidence `0.0` - `1.0`)
+   - Assistance interventions: `assistance_events` (max 200 items, types: `explain_simply`, `generate_quiz`, `suggest_break`, `emotion_check`, `pacing_adjustment`)
+   - Summary: `session_summary` (`total_duration_minutes`, `predominant_emotion`, `notes`)
+
+---
+
 ## ⚙️ Prerequisites & Installation
 
 ### 1. Requirements
 - Python 3.9+
 - Firebase project with **Authentication** (Email/Password method enabled) and **Firestore Database**.
+- MongoDB 6.0+ (Local or MongoDB Atlas cluster).
 
 ### 2. Environment Setup
 Create a Python virtual environment and install dependencies:
@@ -58,29 +84,26 @@ pip install -r requirements.txt
 
 ---
 
-## 🔑 Firebase & Environment Setup
+## 🔑 Environment Configuration
 
 1. Copy `.env.example` to `.env`:
    ```bash
    cp .env.example .env
    ```
 
-2. Retrieve Firebase Credentials:
-   - Go to [Firebase Console](https://console.firebase.google.com/).
-   - **Service Account Credentials** (Admin SDK):
-     - Go to **Project Settings** -> **Service accounts**.
-     - Click **Generate new private key** to download a JSON service account file.
-     - Extract `project_id`, `client_email`, `private_key` into `.env`, OR set `FIREBASE_CREDENTIALS_PATH=./firebase-service-account.json`.
-   - **Web API Key** (for `/auth/login` email/password authentication):
-     - Go to **Project Settings** -> **General** tab -> **Web API Key**.
-     - Copy the key into `FIREBASE_WEB_API_KEY` in `.env`.
-
-3. Sample `.env` file:
+2. Sample `.env` file:
    ```env
+   # Firebase Configuration
    FIREBASE_PROJECT_ID=your-project-id
    FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@your-project-id.iam.gserviceaccount.com
    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
    FIREBASE_WEB_API_KEY=AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+   # MongoDB Configuration (Sprint 1)
+   MONGODB_URI=mongodb://localhost:27017
+   MONGODB_DATABASE=camber_db
+
+   # Server & CORS
    CORS_ORIGINS=http://localhost:3000,http://localhost:5173
    HOST=0.0.0.0
    PORT=8000
@@ -108,7 +131,6 @@ The API server will run at: `http://127.0.0.1:8000`
 
 ### 1. Register New User
 - **Endpoint**: `POST /auth/signup`
-- **Headers**: `Content-Type: application/json`
 - **Request Body**:
   ```json
   {
@@ -131,7 +153,6 @@ The API server will run at: `http://127.0.0.1:8000`
 
 ### 2. Login User
 - **Endpoint**: `POST /auth/login`
-- **Headers**: `Content-Type: application/json`
 - **Request Body**:
   ```json
   {
@@ -168,37 +189,20 @@ The API server will run at: `http://127.0.0.1:8000`
     "email": "chahat@gmail.com"
   }
   ```
-- **Error Response** (`401 Unauthorized`):
-  ```json
-  {
-    "detail": "Invalid authentication token."
-  }
-  ```
-
----
-
-## 🔌 Reusable Auth Dependency for Future Modules
-
-Future CAMBER endpoints (such as learner profile, sessions, quizzes, emotion recognition) can require authentication by adding the `get_current_user` dependency:
-
-```python
-from fastapi import APIRouter, Depends
-from app.dependencies import get_current_user
-
-router = APIRouter()
-
-@router.get("/profile")
-async def get_profile(current_user: dict = Depends(get_current_user)):
-    user_uid = current_user["uid"]
-    return {"status": "success", "uid": user_uid}
-```
 
 ---
 
 ## 🧪 Testing
 
-Run pytest suite:
+Run pytest suite across authentication routes and Sprint 1 schema validation:
 
 ```bash
+# Run all tests
 pytest
+
+# Run focused schema validation tests
+pytest tests/test_schemas.py -v
+
+# Run authentication endpoint tests
+pytest tests/test_auth.py -v
 ```
