@@ -1,0 +1,545 @@
+/* ============================================================
+   CAMBER Authentication Stylesheet (Sign In & Sign Up)
+   Fully scoped under .signin-page to prevent any style leak
+   into the CAMBER landing page.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
+
+.signin-page {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #4c2c17;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 15% 20%, #f8f1dc 0%, transparent 35%),
+    radial-gradient(ellipse at 85% 80%, #c1d5e8 0%, transparent 40%),
+    #dce8f4;
+  box-sizing: border-box;
+  line-height: 1.45;
+}
+
+.signin-page *,
+.signin-page *::before,
+.signin-page *::after {
+  box-sizing: border-box;
+}
+
+.signin-page button,
+.signin-page input {
+  font: inherit;
+}
+
+.signin-page button,
+.signin-page a,
+.signin-page input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   Scene Layout & Mascot Artwork
+   ============================================================ */
+.signin-scene {
+  position: relative;
+  width: min(100%, 980px);
+  min-height: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px 34px;
+  isolation: isolate;
+  box-sizing: border-box;
+}
+
+.scene-artwork {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 760px);
+  margin: 0 auto;
+  line-height: 0;
+  filter: drop-shadow(0 12px 18px rgb(76 44 23 / 12%));
+}
+
+.treehouse-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  transition: opacity 220ms ease;
+}
+
+/* Camber's Speech Bubble */
+.speech-bubble {
+  position: absolute;
+  z-index: 4;
+  top: 7%;
+  right: 5%;
+  max-width: 230px;
+  padding: 15px 20px;
+  border: 2px solid #d8b98c;
+  border-radius: 45% 45% 42% 42%;
+  background: #fff8e9;
+  color: #4c2c17;
+  box-shadow: 0 5px 12px rgb(76 44 23 / 12%);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.4;
+  text-align: center;
+  animation: bubble-in 260ms ease-out;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 28%;
+  width: 20px;
+  height: 20px;
+  background: #fff8e9;
+  border-right: 2px solid #d8b98c;
+  border-bottom: 2px solid #d8b98c;
+  transform: rotate(45deg);
+}
+
+/* ============================================================
+   Cream-Colored Form Card
+   ============================================================ */
+.signin-form {
+  position: relative;
+  z-index: 3;
+  width: min(100%, 470px);
+  margin-top: -95px;
+  padding: 34px 42px 28px;
+  border: 2px solid #e1c9a3;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at top left, rgb(255 255 255 / 60%), transparent 65%),
+    #fff1d6;
+  box-shadow:
+    0 12px 25px rgb(76 44 23 / 13%),
+    inset 0 0 0 5px rgb(255 255 255 / 35%);
+  box-sizing: border-box;
+}
+
+.signin-form h1,
+.signin-form h2 {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(30px, 5vw, 40px);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: #4c2c17;
+}
+
+.form-intro {
+  margin: 9px 0 24px;
+  color: #886e53;
+  font-size: 14px;
+  text-align: center;
+}
+
+.signin-form label {
+  display: block;
+  margin: 16px 0 7px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #4c2c17;
+}
+
+.signin-form input[type="text"],
+.signin-form input[type="email"],
+.signin-form input[type="password"] {
+  display: block;
+  width: 100%;
+  min-height: 49px;
+  padding: 12px 15px;
+  border: 1.5px solid #ddc7a4;
+  border-radius: 13px;
+  outline: none;
+  background: #fffaf0;
+  color: #4c2c17;
+  font-size: 14px;
+  box-shadow: inset 0 2px 4px rgb(76 44 23 / 4%);
+  box-sizing: border-box;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.signin-form input::placeholder {
+  color: #b6a38b;
+}
+
+.signin-form input:focus {
+  border-color: #779ac4;
+  background: #fffdf8;
+  box-shadow: 0 0 0 4px rgb(119 154 196 / 18%);
+}
+
+.signin-button {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 25px;
+  border: 1px solid #5d81b0;
+  border-radius: 28px;
+  background: #779ac4;
+  color: #fffdf7;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #5d81b0;
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.signin-button:hover {
+  background: #6588b5;
+  box-shadow: 0 5px 0 #4f719d;
+  transform: translateY(-1px);
+}
+
+.signin-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #4f719d;
+}
+
+.signup-note {
+  margin: 22px 0 0;
+  color: #785e44;
+  font-size: 13px;
+  text-align: center;
+}
+
+.signup-note a,
+.text-link {
+  margin-left: 5px;
+  color: #547eae;
+  font-weight: 800;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.signup-note a:hover,
+.text-link:hover {
+  color: #355d8c;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   Sign-up Page Additions
+   ============================================================ */
+.signup-heading {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 700px);
+  margin: 0 auto 12px;
+  text-align: center;
+}
+
+.brand-name {
+  margin: 0 0 8px;
+  color: #77906f;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 150ms ease;
+}
+
+.brand-name:hover {
+  color: #587550;
+}
+
+.signup-heading h1 {
+  margin: 0;
+  color: #4c2c17;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(27px, 4vw, 39px);
+  line-height: 1.2;
+}
+
+.signup-form {
+  margin-top: -65px;
+}
+
+.signup-form h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Password Input & Toggle */
+.password-input-wrap {
+  position: relative;
+}
+
+.password-input-wrap input {
+  padding-right: 68px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  padding: 5px;
+  border: 0;
+  background: transparent;
+  color: #547eae;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  color: #355d8c;
+}
+
+/* Password Strength Checklist */
+.password-strength {
+  margin: 10px 0 14px;
+  color: #806c55;
+  font-size: 12px;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.strength-bars span {
+  flex: 1;
+  height: 5px;
+  border-radius: 10px;
+  background: #ded8ca;
+  transition: background-color 200ms ease;
+}
+
+.strength-bars .strength-1,
+.strength-bars .strength-2 {
+  background: #c97c6c;
+}
+
+.strength-bars .strength-3 {
+  background: #d4ad62;
+}
+
+.strength-bars .strength-4,
+.strength-bars .strength-5 {
+  background: #829b76;
+}
+
+.password-strength p {
+  margin: 5px 0;
+}
+
+.password-checklist {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px 10px;
+  margin: 10px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.password-checklist li {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: #886e53;
+  font-size: 12px;
+}
+
+.password-checklist li.valid {
+  color: #52784b;
+  font-weight: 600;
+}
+
+.password-hint {
+  font-size: 11px;
+  color: #9c856f;
+}
+
+/* Terms and Privacy Checkbox */
+.terms-label {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 20px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.6;
+  color: #4c2c17;
+  cursor: pointer;
+}
+
+.terms-label input {
+  flex: 0 0 auto;
+  width: 16px;
+  min-height: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  accent-color: #779ac4;
+  cursor: pointer;
+}
+
+.terms-label a {
+  color: #547eae;
+  font-weight: 800;
+}
+
+.terms-label a:hover {
+  color: #355d8c;
+  text-decoration: underline;
+}
+
+/* Feedback & Status Messages */
+.form-status,
+.match-status {
+  color: #806c55;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.match-status {
+  text-align: left;
+  font-weight: 600;
+  color: #52784b;
+}
+
+.match-status.mismatch {
+  color: #c97c6c;
+}
+
+.back-home-row {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.back-home-link {
+  font-size: 12.5px;
+  color: #785e44;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  transition: color 150ms ease;
+}
+
+.back-home-link:hover {
+  color: #4c2c17;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   Animations & Responsive Breakpoints
+   ============================================================ */
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (min-width: 900px) {
+  .signin-scene {
+    padding-top: 8px;
+  }
+  .scene-artwork {
+    width: min(100%, 720px);
+  }
+}
+
+@media (max-width: 600px) {
+  .signin-page {
+    padding: 18px 12px;
+  }
+
+  .signin-scene {
+    min-height: auto;
+    padding: 0 0 20px;
+  }
+
+  .scene-artwork {
+    width: 100%;
+  }
+
+  .speech-bubble {
+    top: 3%;
+    right: 0;
+    max-width: 155px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .signin-form {
+    width: min(94%, 420px);
+    margin-top: -42px;
+    padding: 27px 23px 24px;
+    border-radius: 18px;
+  }
+
+  .form-intro {
+    font-size: 13px;
+  }
+
+  .signin-form input {
+    min-height: 46px;
+  }
+
+  .signup-heading {
+    margin-bottom: 8px;
+  }
+
+  .signup-form {
+    margin-top: -35px;
+    padding: 24px 20px;
+  }
+
+  .password-checklist {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signin-page *,
+  .signin-page *::before,
+  .signin-page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
