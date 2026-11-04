@@ -65,3 +65,23 @@ def get_current_user(
         "name": name,
         "email": email
     }
+
+
+def get_mongodb_db():
+    """
+    FastAPI dependency that returns the active MongoDB Database instance.
+    Fails safely with HTTP 503 if unconfigured or unreachable without leaking credentials.
+    """
+    from app.database import is_mongodb_configured, get_database
+    if not is_mongodb_configured():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="MongoDB is not configured on the server."
+        )
+    try:
+        return get_database()
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Database connection is unavailable."
+        )
