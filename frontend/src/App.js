@@ -13,12 +13,14 @@ import FinalCTA from './components/FinalCTA';
 import Footer from './components/Footer';
 import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
+import QuestionnairePage from './components/Questionnaire/QuestionnairePage';
 import './App.css';
 
 function normalizeRoute(pathname) {
   const clean = (pathname || '/').toLowerCase().replace(/\/+$/, '') || '/';
   if (clean === '/login' || clean === '/signin') return '/login';
   if (clean === '/signup' || clean === '/register') return '/signup';
+  if (clean === '/questionnaire' || clean === '/onboarding' || clean === '/journal') return '/questionnaire';
   return '/';
 }
 
@@ -59,6 +61,11 @@ function App() {
   // Route 3: /signup — Integrated Sign Up Page
   if (currentRoute === '/signup') {
     return <Signup onNavigate={navigate} />;
+  }
+
+  // Route 4: /questionnaire — Interactive Learner Onboarding Questionnaire
+  if (currentRoute === '/questionnaire') {
+    return <QuestionnairePage onNavigate={navigate} />;
   }
 
   // Route 1: / — Original CAMBER Landing Page

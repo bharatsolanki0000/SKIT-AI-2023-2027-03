@@ -87,6 +87,10 @@ export default function Signup({ onNavigate }) {
     setFormMessage(
       'Your form looks good! Real account creation is not connected yet.'
     );
+    // Redirect first-time user to questionnaire
+    setTimeout(() => {
+      handleNavigate('/questionnaire');
+    }, 700);
   };
 
   return (

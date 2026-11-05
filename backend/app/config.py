@@ -12,9 +12,14 @@ class Settings:
     FIREBASE_WEB_API_KEY: str = os.getenv("FIREBASE_WEB_API_KEY", "")
     FIREBASE_CREDENTIALS_PATH: str = os.getenv("FIREBASE_CREDENTIALS_PATH", "")
 
-    # MongoDB Database Settings (Sprint 1)
-    MONGODB_URI: str = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
-    MONGODB_DATABASE: str = os.getenv("MONGODB_DATABASE", "camber_db")
+    # MongoDB Database Settings (Sprint 1 & Sprint 2)
+    MONGODB_URI: str = os.getenv("MONGODB_URI", "")
+    DATABASE_NAME: str = os.getenv("DATABASE_NAME", os.getenv("MONGODB_DATABASE", "camber"))
+
+    @property
+    def MONGODB_DATABASE(self) -> str:
+        """Backward-compatibility alias for Sprint 1."""
+        return self.DATABASE_NAME
 
     # Clean up formatted newlines in private key
     @property

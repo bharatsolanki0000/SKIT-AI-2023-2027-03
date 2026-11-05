@@ -12,18 +12,22 @@ This module provides backend authentication services built using **FastAPI** and
 backend/
 ├── app/
 │   ├── __init__.py          # Application package declaration
-│   ├── main.py              # FastAPI entry point, CORS, and router registration
+│   ├── main.py              # FastAPI entry point, lifespan management & CORS
 │   ├── config.py            # Environment configuration loader (Firebase & MongoDB)
+│   ├── database.py          # MongoDB client lifecycle, indexes & collection access
 │   ├── firebase.py          # Firebase Admin SDK & Auth REST API integration
 │   ├── schemas.py           # Pydantic v2 schemas: Auth & MongoDB Collections
-│   ├── dependencies.py      # Reusable authentication dependency (get_current_user)
+│   ├── dependencies.py      # Dependencies: auth (get_current_user) & DB (get_mongodb_db)
 │   └── routes/
 │       ├── __init__.py      # Routes package declaration
-│       └── auth.py          # /auth/signup, /auth/login, /auth/me endpoints
+│       ├── auth.py          # /auth/signup, /auth/login, /auth/me endpoints
+│       └── health.py        # /health/database health check endpoint
 ├── tests/
 │   ├── __init__.py          # Test package declaration
 │   ├── test_auth.py         # Authentication endpoint unit and integration tests
+│   ├── test_database.py     # Sprint 2 database config, client & health check tests
 │   └── test_schemas.py      # Sprint 1 MongoDB schema validation test suite
+├── database.py              # Backward-compatible root re-export of app.database
 ├── .env.example             # Environment variable template
 ├── .gitignore               # Secrets and build artifact ignore rules
 ├── requirements.txt         # Backend Python dependencies
@@ -99,9 +103,10 @@ pip install -r requirements.txt
    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
    FIREBASE_WEB_API_KEY=AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-   # MongoDB Configuration (Sprint 1)
-   MONGODB_URI=mongodb://localhost:27017
-   MONGODB_DATABASE=camber_db
+   # MongoDB Database Configuration (Sprint 2)
+   MONGODB_URI=your_mongodb_atlas_connection_string
+   DATABASE_NAME=camber
+   MONGODB_DATABASE=camber
 
    # Server & CORS
    CORS_ORIGINS=http://localhost:3000,http://localhost:5173
@@ -190,15 +195,43 @@ The API server will run at: `http://127.0.0.1:8000`
   }
   ```
 
+### 4. MongoDB Database Health Check
+- **Endpoint**: `GET /health/database`
+- **Description**: Verifies MongoDB connectivity and performs an actual database ping when configured.
+- **Response — Configured & Connected** (`200 OK`):
+  ```json
+  {
+    "status": "connected",
+    "database": "camber"
+  }
+  ```
+- **Response — Unconfigured** (`503 Service Unavailable`):
+  ```json
+  {
+    "status": "not_configured",
+    "message": "MongoDB is not configured."
+  }
+  ```
+- **Response — Configured but Unreachable** (`503 Service Unavailable`):
+  ```json
+  {
+    "status": "unavailable",
+    "message": "Database connection is unavailable."
+  }
+  ```
+
 ---
 
 ## 🧪 Testing
 
-Run pytest suite across authentication routes and Sprint 1 schema validation:
+Run pytest suite across authentication routes, database configuration, and Sprint 1 schema validation:
 
 ```bash
 # Run all tests
 pytest
+
+# Run Sprint 2 database connection, client lifecycle & health tests
+pytest tests/test_database.py -v
 
 # Run focused schema validation tests
 pytest tests/test_schemas.py -v
