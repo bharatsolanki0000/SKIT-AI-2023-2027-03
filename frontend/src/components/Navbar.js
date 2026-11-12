@@ -10,12 +10,22 @@ export default function Navbar({ onNavigate }) {
     { id: 'about', label: 'About', href: '#what-is-camber' },
     { id: 'features', label: 'Features', href: '#features' },
     { id: 'how-it-works', label: 'How It Works', href: '#how-it-works' },
+    { id: 'dashboard', label: 'Dashboard', href: '/dashboard', isRoute: true },
     { id: 'faq', label: 'FAQ', href: '#faq' },
   ];
 
-  const handleNavClick = (id, href) => {
+  const handleNavClick = (id, href, isRoute) => {
     setActiveNav(id);
     setMobileMenuOpen(false);
+    if (isRoute) {
+      if (onNavigate) {
+        onNavigate(href);
+      } else {
+        window.history.pushState({}, '', href);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }
+      return;
+    }
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -73,7 +83,7 @@ export default function Navbar({ onNavigate }) {
                 className={`nav-link ${activeNav === item.id ? 'active' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleNavClick(item.id, item.href);
+                  handleNavClick(item.id, item.href, item.isRoute);
                 }}
               >
                 {item.label}
@@ -119,7 +129,7 @@ export default function Navbar({ onNavigate }) {
                   className={`mobile-link ${activeNav === item.id ? 'active' : ''}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleNavClick(item.id, item.href);
+                    handleNavClick(item.id, item.href, item.isRoute);
                   }}
                 >
                   {item.label}

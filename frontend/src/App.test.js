@@ -127,4 +127,59 @@ describe('CAMBER Unified Application Tests', () => {
     fireEvent.click(backHomeBtn);
     expect(screen.getByRole('heading', { level: 1, name: /Good Ideas/i })).toBeInTheDocument();
   });
+
+  test('navigates to Dashboard and verifies all reference sections, cards and extension connection workflow', () => {
+    window.history.pushState({}, '', '/dashboard');
+    render(<App />);
+
+    // 1. Left Sidebar
+    expect(screen.getByTitle(/Return to CAMBER Home/i)).toBeInTheDocument();
+    expect(screen.getByText(/Small steps make big progress!/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Start or resume learning/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Study history and insights/i })).toBeInTheDocument();
+
+    // 2. Welcome Banner
+    expect(screen.getByText(/Ready to learn something new today\?/i)).toBeInTheDocument();
+    expect(screen.getByAltText(/Camber squirrel mascot peeking with paws resting/i)).toBeInTheDocument();
+
+    // 3. Study Space Card & Extension CTA
+    expect(screen.getByRole('heading', { level: 2, name: /Ready to learn something new\?/i })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/What would you like to study\?/i)).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /Select Subject/i })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /Suggested study duration/i })).toBeInTheDocument();
+
+    const connectBtn = screen.getByRole('button', { name: /Connect with CAMBER Extension/i });
+    expect(connectBtn).toBeInTheDocument();
+
+    // 4. Learning Snapshot 4 cards
+    expect(screen.getByRole('heading', { level: 2, name: /Your Learning Snapshot/i })).toBeInTheDocument();
+    expect(screen.getByText(/Study time this week/i)).toBeInTheDocument();
+    expect(screen.getByText(/Sessions completed/i)).toBeInTheDocument();
+    expect(screen.getByText(/Goals worked on/i)).toBeInTheDocument();
+    expect(screen.getByText(/Day streak/i)).toBeInTheDocument();
+
+    // 5. "A Little Something for You" 4 cards
+    expect(screen.getByRole('heading', { level: 2, name: /A Little Something for You/i })).toBeInTheDocument();
+    expect(screen.getByText(/Make it simpler/i)).toBeInTheDocument();
+    expect(screen.getByText(/Quick quiz/i)).toBeInTheDocument();
+    expect(screen.getByText(/A little motivation/i)).toBeInTheDocument();
+    expect(screen.getByText(/Take a little break/i)).toBeInTheDocument();
+
+    // 6. Right Column Cards
+    expect(screen.getByRole('heading', { level: 3, name: /Your Learning Preferences/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: /Camber's Corner/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: /Your Recent Activity/i })).toBeInTheDocument();
+    expect(screen.getByText(/You're doing great!/i)).toBeInTheDocument();
+    expect(screen.getByText(/Introduction to Neural Networks/i)).toBeInTheDocument();
+
+    // 7. Test Extension Connection Workflow (Opens connection modal without false claims)
+    fireEvent.click(connectBtn);
+    expect(screen.getByRole('heading', { level: 3, name: /Connect with CAMBER Extension/i })).toBeInTheDocument();
+    expect(screen.getByText(/Pair your browser companion to begin your emotion-aware study session\./i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Got it, Return to Dashboard/i })).toBeInTheDocument();
+
+    // Close modal
+    fireEvent.click(screen.getByRole('button', { name: /Got it, Return to Dashboard/i }));
+    expect(screen.queryByRole('heading', { level: 3, name: /Connect with CAMBER Extension/i })).not.toBeInTheDocument();
+  });
 });

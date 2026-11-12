@@ -14,6 +14,7 @@ import Footer from './components/Footer';
 import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
 import QuestionnairePage from './components/Questionnaire/QuestionnairePage';
+import StudentDashboard from './components/Dashboard/StudentDashboard';
 import './App.css';
 
 function normalizeRoute(pathname) {
@@ -21,6 +22,7 @@ function normalizeRoute(pathname) {
   if (clean === '/login' || clean === '/signin') return '/login';
   if (clean === '/signup' || clean === '/register') return '/signup';
   if (clean === '/questionnaire' || clean === '/onboarding' || clean === '/journal') return '/questionnaire';
+  if (clean === '/dashboard' || clean === '/student-dashboard') return '/dashboard';
   return '/';
 }
 
@@ -66,6 +68,11 @@ function App() {
   // Route 4: /questionnaire — Interactive Learner Onboarding Questionnaire
   if (currentRoute === '/questionnaire') {
     return <QuestionnairePage onNavigate={navigate} />;
+  }
+
+  // Route 5: /dashboard — Student Dashboard
+  if (currentRoute === '/dashboard') {
+    return <StudentDashboard onNavigate={navigate} />;
   }
 
   // Route 1: / — Original CAMBER Landing Page
