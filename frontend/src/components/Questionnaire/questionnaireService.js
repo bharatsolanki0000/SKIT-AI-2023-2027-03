@@ -1,7 +1,8 @@
 /**
- * Reusable Questionnaire Submission Service
- * Persists responses to localStorage and provides a clean API interface
- * ready for the backend personalization module.
+ * Reusable Questionnaire & Learner Profile Service
+ * Manages profile lifecycle, questionnaire submission, and updates.
+ * Persists responses to localStorage and provides a clean REST interface
+ * to the FastAPI backend (/api/profiles).
  */
 
 const STORAGE_KEY_ANSWERS = "camber_questionnaire_answers";
@@ -55,13 +56,12 @@ export const questionnaireService = {
       console.warn("Could not save questionnaire to localStorage:", e);
     }
 
-    // 2. Ready for backend API if present
+    // 2. Transmit to backend API if configured
     try {
-      // Graceful fetch to backend if configured
       const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
       const token = localStorage.getItem("camber_id_token");
       
-      const response = await fetch(`${apiUrl}/api/learner-profile/questionnaire`, {
+      const response = await fetch(`${apiUrl}/api/profiles`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,8 +75,7 @@ export const questionnaireService = {
         return { success: true, source: "backend", data: result };
       }
     } catch (apiError) {
-      // Backend not yet running or endpoint is future sprint - local persistence succeeds
-      console.info("Questionnaire saved locally (backend endpoint pending integration).");
+      console.info("Questionnaire saved locally (backend endpoint pending or offline).");
     }
 
     return {
@@ -84,6 +83,60 @@ export const questionnaireService = {
       source: "local",
       payload,
     };
+  },
+
+  /**
+   * Fetch current authenticated learner profile from backend
+   */
+  fetchProfile: async () => {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
+      const token = localStorage.getItem("camber_id_token");
+      if (!token) return null;
+
+      const response = await fetch(`${apiUrl}/api/profiles/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+      return null;
+    } catch (e) {
+      console.warn("Could not fetch remote learner profile:", e);
+      return null;
+    }
+  },
+
+  /**
+   * Update current authenticated learner profile preferences
+   */
+  updateProfile: async (updateData) => {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
+      const token = localStorage.getItem("camber_id_token");
+      if (!token) throw new Error("Authentication required.");
+
+      const response = await fetch(`${apiUrl}/api/profiles/me`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+      const err = await response.json();
+      throw new Error(err.detail || "Profile update failed.");
+    } catch (e) {
+      console.warn("Error updating learner profile:", e);
+      throw e;
+    }
   },
 
   /**
@@ -98,4 +151,3 @@ export const questionnaireService = {
     }
   },
 };
-

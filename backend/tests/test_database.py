@@ -67,12 +67,12 @@ def test_no_secrets_exposed_in_health_or_errors():
     """Verify secrets in URI are never leaked in status dictionaries."""
     # secret_uri = "mongodb+srv://admin_user:SuperSecretPassword123@cluster0.abc.mongodb.net/camber"
     test_username = "test_admin"
-test_password = "unit-test-" + "only"
+    test_password = "unit-test-" + "only"
 
-secret_uri = (
-    f"mongodb+srv://{test_username}:{test_password}"
-    "@cluster0.example.invalid/camber"
-)
+    secret_uri = (
+        f"mongodb+srv://{test_username}:{test_password}"
+        "@cluster0.example.invalid/camber"
+    )
     with patch.object(settings, "MONGODB_URI", secret_uri):
         with patch("app.database.ping_database", return_value=False):
             health = db_mod.check_database_health()

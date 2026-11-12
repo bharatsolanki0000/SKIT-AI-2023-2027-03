@@ -317,6 +317,295 @@ class UserDocument(UserBase):
         return validate_object_id_str(v)
 
 
+# =============================================================================
+# SPRINT 3: QUESTIONNAIRE VALIDATION & PROFILE MANAGEMENT SCHEMAS
+# =============================================================================
+
+# Exact permitted options from questionnaireData.js
+QUESTIONNAIRE_PERMITTED_OPTIONS = {
+    "Q4": {"Never", "Rarely", "Sometimes", "Often", "Almost Always"},
+    "Q6": {"Never", "Rarely", "Sometimes", "Often", "Almost Always"},
+    "Q7": {"Never", "Rarely", "Sometimes", "Often", "Very often"},
+    "Q8": {"Never", "Rarely", "Sometimes", "Often", "Very often"},
+    "Q9": {
+        "Less than 15 minutes",
+        "15–30 minutes",
+        "15-30 minutes",
+        "30–45 minutes",
+        "30-45 minutes",
+        "45–60 minutes",
+        "45-60 minutes",
+        "More than 60 minutes",
+    },
+    "Q10": {"Never", "Rarely", "Sometimes", "Often", "Very often"},
+    "Q18": {
+        "Mathematics",
+        "Science",
+        "Programming / Computing",
+        "Languages",
+        "Social sciences",
+        "Humanities",
+        "Other",
+    },
+    "Q21": {
+        "Staying focused",
+        "Getting started",
+        "Reading long passages",
+        "Understanding complicated text",
+        "Remembering what I studied",
+        "Managing study time",
+        "Staying motivated",
+        "Too much information at once",
+        "None of these",
+    },
+    "Q11": {
+        "Phone",
+        "Social media",
+        "Noise",
+        "My own thoughts",
+        "Friends / people around me",
+        "Something else",
+    },
+    "Q12": {
+        "Diagrams, pictures and visual explanations",
+        "Listening to someone explain it",
+        "Reading detailed explanations",
+        "Demonstrations and hands-on examples",
+        "A combination of these",
+    },
+    "Q13": {
+        "Videos",
+        "Podcasts / audio explanations",
+        "Articles / notes",
+        "Interactive demonstrations",
+        "A mixture of these",
+    },
+    "Q14": {
+        "Seeing an example",
+        "Hearing an explanation",
+        "Reading it step-by-step",
+        "Trying it myself",
+        "Discussing it with someone",
+    },
+    "Q19": {
+        "Good grades",
+        "Career / placement",
+        "Curiosity",
+        "Parents / family",
+        "Competition",
+        "Self-improvement",
+    },
+    "Q20": {
+        "Taking a short break",
+        "Encouragement",
+        "Seeing my progress",
+        "Changing the way the topic is explained",
+        "Studying with someone",
+        "A clear goal",
+        "A reward",
+    },
+    "Q23": {
+        "One complete explanation",
+        "Small sections one at a time",
+        "A summary first, then details",
+        "Visual explanation first",
+        "Examples first",
+    },
+}
+
+SINGLE_CHOICE_QUESTION_IDS = {"Q4", "Q6", "Q7", "Q8", "Q9", "Q10", "Q12", "Q13", "Q14", "Q19", "Q23"}
+MULTIPLE_CHOICE_QUESTION_IDS = {"Q18", "Q21", "Q11", "Q20"}
+ALL_QUESTION_IDS = SINGLE_CHOICE_QUESTION_IDS | MULTIPLE_CHOICE_QUESTION_IDS
+
+class QuestionnaireSubmission(BaseModel):
+    """
+    Validates completed 15-question questionnaire responses submitted by the frontend.
+    Accepts payload with either a nested 'answers' dict or direct top-level question fields.
+    """
+    model_config = ConfigDict(extra="ignore")
+
+    submittedAt: Optional[str] = None
+    answers: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+    # Optional direct question fields if submitted directly
+    Q4: Optional[str] = None
+    Q6: Optional[str] = None
+    Q7: Optional[str] = None
+    Q8: Optional[str] = None
+    Q9: Optional[str] = None
+    Q10: Optional[str] = None
+    Q18: Optional[List[str]] = None
+    Q18_other_details: Optional[str] = None
+    Q21: Optional[List[str]] = None
+    Q11: Optional[List[str]] = None
+    Q11_other_details: Optional[str] = None
+    Q12: Optional[str] = None
+    Q13: Optional[str] = None
+    Q14: Optional[str] = None
+    Q19: Optional[str] = None
+    Q20: Optional[List[str]] = None
+    Q23: Optional[str] = None
+
+    def get_normalized_answers(self) -> Dict[str, Any]:
+        """Consolidates and validates answers from nested 'answers' or top-level fields."""
+        raw = {}
+        if self.answers and isinstance(self.answers, dict):
+            raw.update(self.answers)
+        
+        # Merge top-level fields if provided
+        for qid in ALL_QUESTION_IDS:
+            val = getattr(self, qid, None)
+            if val is not None and qid not in raw:
+                raw[qid] = val
+        if self.Q18_other_details and "Q18_other_details" not in raw:
+            raw["Q18_other_details"] = self.Q18_other_details
+        if self.Q11_other_details and "Q11_other_details" not in raw:
+            raw["Q11_other_details"] = self.Q11_other_details
+
+        # Validate that all 15 questions exist
+        missing = [qid for qid in ALL_QUESTION_IDS if qid not in raw or raw[qid] is None]
+        if missing:
+            raise ValueError(f"Missing required questionnaire responses for: {', '.join(sorted(missing))}")
+
+        # Validate each question's answer type and allowed options
+        for qid, val in raw.items():
+            if qid in SINGLE_CHOICE_QUESTION_IDS:
+                if not isinstance(val, str):
+                    raise ValueError(f"Question '{qid}' expects a single choice string, received {type(val).__name__}.")
+                permitted = QUESTIONNAIRE_PERMITTED_OPTIONS[qid]
+                # Normalize dash in Q9 if needed
+                clean_val = val.replace("–", "-")
+                clean_permitted = {p.replace("–", "-") for p in permitted}
+                if clean_val not in clean_permitted:
+                    raise ValueError(f"Invalid option '{val}' for question '{qid}'. Permitted: {sorted(permitted)}")
+
+            elif qid in MULTIPLE_CHOICE_QUESTION_IDS:
+                if not isinstance(val, list) or len(val) == 0:
+                    raise ValueError(f"Question '{qid}' expects a non-empty list of selected choices.")
+                permitted = QUESTIONNAIRE_PERMITTED_OPTIONS[qid]
+                for item in val:
+                    if not isinstance(item, str) or item not in permitted:
+                        raise ValueError(f"Invalid option '{item}' for question '{qid}'. Permitted: {sorted(permitted)}")
+                # Mutual exclusivity check for Q21 "None of these"
+                if qid == "Q21" and "None of these" in val and len(val) > 1:
+                    raise ValueError("Question 'Q21' option 'None of these' cannot be selected alongside other options.")
+
+            elif qid in ("Q18_other_details", "Q11_other_details"):
+                if val is not None and not isinstance(val, str):
+                    raise ValueError(f"Field '{qid}' must be a string description.")
+
+        return raw
+
+
+class LearnerProfileResponse(BaseModel):
+    """Clean API response model for a learner profile."""
+    id: Optional[str] = Field(default=None, alias="_id", description="MongoDB Profile Identifier")
+    user_id: str
+    learning_goals: List[str] = Field(default_factory=list)
+    preferred_explanation_style: ExplanationStyle = ExplanationStyle.SIMPLE
+    study_preferences: StudyPreferences = Field(default_factory=StudyPreferences)
+    strengths: List[str] = Field(default_factory=list)
+    areas_for_improvement: List[str] = Field(default_factory=list)
+    attention_preferences: AttentionPreferences = Field(default_factory=AttentionPreferences)
+    accessibility_settings: AccessibilitySettings = Field(default_factory=AccessibilitySettings)
+    questionnaire_responses: Optional[Dict[str, Any]] = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        extra="ignore"
+    )
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def validate_id(cls, v: Any) -> Optional[str]:
+        return validate_object_id_str(v)
+
+
+def derive_learner_profile_from_questionnaire(user_id: str, answers: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Derives Sprint 1 pedagogical preferences and settings from the 15 questionnaire responses
+    while preserving the raw answers for future AI personalization.
+    """
+    # 1. Preferred Explanation Style
+    # Derived from Q14 ("When a topic is difficult, what helps you most?") & Q12
+    q14 = answers.get("Q14", "")
+    q12 = answers.get("Q12", "")
+    if q14 == "Seeing an example" or "Diagrams, pictures" in q12:
+        style = ExplanationStyle.VISUAL
+    elif q14 == "Reading it step-by-step":
+        style = ExplanationStyle.STEP_BY_STEP
+    elif q14 == "Discussing it with someone":
+        style = ExplanationStyle.ANALOGY
+    elif q14 == "Trying it myself":
+        style = ExplanationStyle.DETAILED
+    else:
+        style = ExplanationStyle.SIMPLE
+
+    # 2. Study Preferences
+    # Derived from Q9 focus duration and Q23 pace
+    q9 = str(answers.get("Q9", "")).replace("–", "-")
+    duration_map = {
+        "less than 15 minutes": 15,
+        "15-30 minutes": 25,
+        "30-45 minutes": 35,
+        "45-60 minutes": 50,
+        "more than 60 minutes": 60,
+    }
+    session_duration = duration_map.get(q9.lower(), 25)
+
+    q23 = answers.get("Q23", "")
+    if q23 == "Small sections one at a time":
+        pace = LearningPace.GENTLE
+    elif q23 == "One complete explanation":
+        pace = LearningPace.INTENSIVE
+    else:
+        pace = LearningPace.MODERATE
+
+    study_prefs = StudyPreferences(
+        session_duration_minutes=session_duration,
+        break_duration_minutes=5,
+        learning_pace=pace,
+        reminder_frequency=ReminderFrequency.NORMAL
+    )
+
+    # 3. Areas for Improvement (from Q18 difficult subjects)
+    difficult_subjects = [s for s in answers.get("Q18", []) if s != "Other"]
+    if "Other" in answers.get("Q18", []) and answers.get("Q18_other_details"):
+        difficult_subjects.append(answers["Q18_other_details"])
+
+    # 4. Attention Preferences (from Q20 and Q21)
+    q20 = answers.get("Q20", [])
+    prefer_breaks = "Taking a short break" in q20 or session_duration <= 25
+    attention_prefs = AttentionPreferences(
+        prefer_break_reminders=prefer_breaks,
+        break_reminder_interval_minutes=session_duration,
+        background_sounds=BackgroundSound.NONE
+    )
+
+    # 5. Accessibility Settings (defaults)
+    accessibility = AccessibilitySettings()
+
+    now = utc_now()
+
+    return {
+        "user_id": user_id,
+        "learning_goals": [],
+        "preferred_explanation_style": style.value,
+        "study_preferences": study_prefs.model_dump(),
+        "strengths": [],
+        "areas_for_improvement": difficult_subjects,
+        "attention_preferences": attention_prefs.model_dump(),
+        "accessibility_settings": accessibility.model_dump(),
+        "questionnaire_responses": answers,
+        "created_at": now,
+        "updated_at": now
+    }
+
+
+
 # -----------------------------------------------------------------------------
 # COLLECTION 2: LEARNER_PROFILES (User Preferences & Accessibility)
 # -----------------------------------------------------------------------------
@@ -354,6 +643,10 @@ class LearnerProfileBase(BaseModel):
         default_factory=AccessibilitySettings,
         description="Sensory and cognitive accommodation preferences (non-medical)"
     )
+    questionnaire_responses: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Raw questionnaire responses mapped by question ID"
+    )
 
 class LearnerProfileCreate(LearnerProfileBase):
     pass
@@ -366,6 +659,7 @@ class LearnerProfileUpdate(BaseModel):
     areas_for_improvement: Optional[List[str]] = None
     attention_preferences: Optional[AttentionPreferences] = None
     accessibility_settings: Optional[AccessibilitySettings] = None
+    questionnaire_responses: Optional[Dict[str, Any]] = None
 
 class LearnerProfileDocument(LearnerProfileBase):
     id: Optional[str] = Field(default=None, alias="_id", description="MongoDB Profile Identifier")
@@ -381,6 +675,295 @@ class LearnerProfileDocument(LearnerProfileBase):
     @classmethod
     def validate_id(cls, v: Any) -> Optional[str]:
         return validate_object_id_str(v)
+
+
+# =============================================================================
+# SPRINT 3: QUESTIONNAIRE VALIDATION & PROFILE MANAGEMENT SCHEMAS
+# =============================================================================
+
+# Exact permitted options from questionnaireData.js
+QUESTIONNAIRE_PERMITTED_OPTIONS = {
+    "Q4": {"Never", "Rarely", "Sometimes", "Often", "Almost Always"},
+    "Q6": {"Never", "Rarely", "Sometimes", "Often", "Almost Always"},
+    "Q7": {"Never", "Rarely", "Sometimes", "Often", "Very often"},
+    "Q8": {"Never", "Rarely", "Sometimes", "Often", "Very often"},
+    "Q9": {
+        "Less than 15 minutes",
+        "15–30 minutes",
+        "15-30 minutes",
+        "30–45 minutes",
+        "30-45 minutes",
+        "45–60 minutes",
+        "45-60 minutes",
+        "More than 60 minutes",
+    },
+    "Q10": {"Never", "Rarely", "Sometimes", "Often", "Very often"},
+    "Q18": {
+        "Mathematics",
+        "Science",
+        "Programming / Computing",
+        "Languages",
+        "Social sciences",
+        "Humanities",
+        "Other",
+    },
+    "Q21": {
+        "Staying focused",
+        "Getting started",
+        "Reading long passages",
+        "Understanding complicated text",
+        "Remembering what I studied",
+        "Managing study time",
+        "Staying motivated",
+        "Too much information at once",
+        "None of these",
+    },
+    "Q11": {
+        "Phone",
+        "Social media",
+        "Noise",
+        "My own thoughts",
+        "Friends / people around me",
+        "Something else",
+    },
+    "Q12": {
+        "Diagrams, pictures and visual explanations",
+        "Listening to someone explain it",
+        "Reading detailed explanations",
+        "Demonstrations and hands-on examples",
+        "A combination of these",
+    },
+    "Q13": {
+        "Videos",
+        "Podcasts / audio explanations",
+        "Articles / notes",
+        "Interactive demonstrations",
+        "A mixture of these",
+    },
+    "Q14": {
+        "Seeing an example",
+        "Hearing an explanation",
+        "Reading it step-by-step",
+        "Trying it myself",
+        "Discussing it with someone",
+    },
+    "Q19": {
+        "Good grades",
+        "Career / placement",
+        "Curiosity",
+        "Parents / family",
+        "Competition",
+        "Self-improvement",
+    },
+    "Q20": {
+        "Taking a short break",
+        "Encouragement",
+        "Seeing my progress",
+        "Changing the way the topic is explained",
+        "Studying with someone",
+        "A clear goal",
+        "A reward",
+    },
+    "Q23": {
+        "One complete explanation",
+        "Small sections one at a time",
+        "A summary first, then details",
+        "Visual explanation first",
+        "Examples first",
+    },
+}
+
+SINGLE_CHOICE_QUESTION_IDS = {"Q4", "Q6", "Q7", "Q8", "Q9", "Q10", "Q12", "Q13", "Q14", "Q19", "Q23"}
+MULTIPLE_CHOICE_QUESTION_IDS = {"Q18", "Q21", "Q11", "Q20"}
+ALL_QUESTION_IDS = SINGLE_CHOICE_QUESTION_IDS | MULTIPLE_CHOICE_QUESTION_IDS
+
+class QuestionnaireSubmission(BaseModel):
+    """
+    Validates completed 15-question questionnaire responses submitted by the frontend.
+    Accepts payload with either a nested 'answers' dict or direct top-level question fields.
+    """
+    model_config = ConfigDict(extra="ignore")
+
+    submittedAt: Optional[str] = None
+    answers: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+    # Optional direct question fields if submitted directly
+    Q4: Optional[str] = None
+    Q6: Optional[str] = None
+    Q7: Optional[str] = None
+    Q8: Optional[str] = None
+    Q9: Optional[str] = None
+    Q10: Optional[str] = None
+    Q18: Optional[List[str]] = None
+    Q18_other_details: Optional[str] = None
+    Q21: Optional[List[str]] = None
+    Q11: Optional[List[str]] = None
+    Q11_other_details: Optional[str] = None
+    Q12: Optional[str] = None
+    Q13: Optional[str] = None
+    Q14: Optional[str] = None
+    Q19: Optional[str] = None
+    Q20: Optional[List[str]] = None
+    Q23: Optional[str] = None
+
+    def get_normalized_answers(self) -> Dict[str, Any]:
+        """Consolidates and validates answers from nested 'answers' or top-level fields."""
+        raw = {}
+        if self.answers and isinstance(self.answers, dict):
+            raw.update(self.answers)
+        
+        # Merge top-level fields if provided
+        for qid in ALL_QUESTION_IDS:
+            val = getattr(self, qid, None)
+            if val is not None and qid not in raw:
+                raw[qid] = val
+        if self.Q18_other_details and "Q18_other_details" not in raw:
+            raw["Q18_other_details"] = self.Q18_other_details
+        if self.Q11_other_details and "Q11_other_details" not in raw:
+            raw["Q11_other_details"] = self.Q11_other_details
+
+        # Validate that all 15 questions exist
+        missing = [qid for qid in ALL_QUESTION_IDS if qid not in raw or raw[qid] is None]
+        if missing:
+            raise ValueError(f"Missing required questionnaire responses for: {', '.join(sorted(missing))}")
+
+        # Validate each question's answer type and allowed options
+        for qid, val in raw.items():
+            if qid in SINGLE_CHOICE_QUESTION_IDS:
+                if not isinstance(val, str):
+                    raise ValueError(f"Question '{qid}' expects a single choice string, received {type(val).__name__}.")
+                permitted = QUESTIONNAIRE_PERMITTED_OPTIONS[qid]
+                # Normalize dash in Q9 if needed
+                clean_val = val.replace("–", "-")
+                clean_permitted = {p.replace("–", "-") for p in permitted}
+                if clean_val not in clean_permitted:
+                    raise ValueError(f"Invalid option '{val}' for question '{qid}'. Permitted: {sorted(permitted)}")
+
+            elif qid in MULTIPLE_CHOICE_QUESTION_IDS:
+                if not isinstance(val, list) or len(val) == 0:
+                    raise ValueError(f"Question '{qid}' expects a non-empty list of selected choices.")
+                permitted = QUESTIONNAIRE_PERMITTED_OPTIONS[qid]
+                for item in val:
+                    if not isinstance(item, str) or item not in permitted:
+                        raise ValueError(f"Invalid option '{item}' for question '{qid}'. Permitted: {sorted(permitted)}")
+                # Mutual exclusivity check for Q21 "None of these"
+                if qid == "Q21" and "None of these" in val and len(val) > 1:
+                    raise ValueError("Question 'Q21' option 'None of these' cannot be selected alongside other options.")
+
+            elif qid in ("Q18_other_details", "Q11_other_details"):
+                if val is not None and not isinstance(val, str):
+                    raise ValueError(f"Field '{qid}' must be a string description.")
+
+        return raw
+
+
+class LearnerProfileResponse(BaseModel):
+    """Clean API response model for a learner profile."""
+    id: Optional[str] = Field(default=None, alias="_id", description="MongoDB Profile Identifier")
+    user_id: str
+    learning_goals: List[str] = Field(default_factory=list)
+    preferred_explanation_style: ExplanationStyle = ExplanationStyle.SIMPLE
+    study_preferences: StudyPreferences = Field(default_factory=StudyPreferences)
+    strengths: List[str] = Field(default_factory=list)
+    areas_for_improvement: List[str] = Field(default_factory=list)
+    attention_preferences: AttentionPreferences = Field(default_factory=AttentionPreferences)
+    accessibility_settings: AccessibilitySettings = Field(default_factory=AccessibilitySettings)
+    questionnaire_responses: Optional[Dict[str, Any]] = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        extra="ignore"
+    )
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def validate_id(cls, v: Any) -> Optional[str]:
+        return validate_object_id_str(v)
+
+
+def derive_learner_profile_from_questionnaire(user_id: str, answers: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Derives Sprint 1 pedagogical preferences and settings from the 15 questionnaire responses
+    while preserving the raw answers for future AI personalization.
+    """
+    # 1. Preferred Explanation Style
+    # Derived from Q14 ("When a topic is difficult, what helps you most?") & Q12
+    q14 = answers.get("Q14", "")
+    q12 = answers.get("Q12", "")
+    if q14 == "Seeing an example" or "Diagrams, pictures" in q12:
+        style = ExplanationStyle.VISUAL
+    elif q14 == "Reading it step-by-step":
+        style = ExplanationStyle.STEP_BY_STEP
+    elif q14 == "Discussing it with someone":
+        style = ExplanationStyle.ANALOGY
+    elif q14 == "Trying it myself":
+        style = ExplanationStyle.DETAILED
+    else:
+        style = ExplanationStyle.SIMPLE
+
+    # 2. Study Preferences
+    # Derived from Q9 focus duration and Q23 pace
+    q9 = str(answers.get("Q9", "")).replace("–", "-")
+    duration_map = {
+        "less than 15 minutes": 15,
+        "15-30 minutes": 25,
+        "30-45 minutes": 35,
+        "45-60 minutes": 50,
+        "more than 60 minutes": 60,
+    }
+    session_duration = duration_map.get(q9.lower(), 25)
+
+    q23 = answers.get("Q23", "")
+    if q23 == "Small sections one at a time":
+        pace = LearningPace.GENTLE
+    elif q23 == "One complete explanation":
+        pace = LearningPace.INTENSIVE
+    else:
+        pace = LearningPace.MODERATE
+
+    study_prefs = StudyPreferences(
+        session_duration_minutes=session_duration,
+        break_duration_minutes=5,
+        learning_pace=pace,
+        reminder_frequency=ReminderFrequency.NORMAL
+    )
+
+    # 3. Areas for Improvement (from Q18 difficult subjects)
+    difficult_subjects = [s for s in answers.get("Q18", []) if s != "Other"]
+    if "Other" in answers.get("Q18", []) and answers.get("Q18_other_details"):
+        difficult_subjects.append(answers["Q18_other_details"])
+
+    # 4. Attention Preferences (from Q20 and Q21)
+    q20 = answers.get("Q20", [])
+    prefer_breaks = "Taking a short break" in q20 or session_duration <= 25
+    attention_prefs = AttentionPreferences(
+        prefer_break_reminders=prefer_breaks,
+        break_reminder_interval_minutes=session_duration,
+        background_sounds=BackgroundSound.NONE
+    )
+
+    # 5. Accessibility Settings (defaults)
+    accessibility = AccessibilitySettings()
+
+    now = utc_now()
+
+    return {
+        "user_id": user_id,
+        "learning_goals": [],
+        "preferred_explanation_style": style.value,
+        "study_preferences": study_prefs.model_dump(),
+        "strengths": [],
+        "areas_for_improvement": difficult_subjects,
+        "attention_preferences": attention_prefs.model_dump(),
+        "accessibility_settings": accessibility.model_dump(),
+        "questionnaire_responses": answers,
+        "created_at": now,
+        "updated_at": now
+    }
+
 
 
 # -----------------------------------------------------------------------------
@@ -458,3 +1041,292 @@ class StudySessionDocument(StudySessionBase):
     @classmethod
     def validate_id(cls, v: Any) -> Optional[str]:
         return validate_object_id_str(v)
+
+
+# =============================================================================
+# SPRINT 3: QUESTIONNAIRE VALIDATION & PROFILE MANAGEMENT SCHEMAS
+# =============================================================================
+
+# Exact permitted options from questionnaireData.js
+QUESTIONNAIRE_PERMITTED_OPTIONS = {
+    "Q4": {"Never", "Rarely", "Sometimes", "Often", "Almost Always"},
+    "Q6": {"Never", "Rarely", "Sometimes", "Often", "Almost Always"},
+    "Q7": {"Never", "Rarely", "Sometimes", "Often", "Very often"},
+    "Q8": {"Never", "Rarely", "Sometimes", "Often", "Very often"},
+    "Q9": {
+        "Less than 15 minutes",
+        "15–30 minutes",
+        "15-30 minutes",
+        "30–45 minutes",
+        "30-45 minutes",
+        "45–60 minutes",
+        "45-60 minutes",
+        "More than 60 minutes",
+    },
+    "Q10": {"Never", "Rarely", "Sometimes", "Often", "Very often"},
+    "Q18": {
+        "Mathematics",
+        "Science",
+        "Programming / Computing",
+        "Languages",
+        "Social sciences",
+        "Humanities",
+        "Other",
+    },
+    "Q21": {
+        "Staying focused",
+        "Getting started",
+        "Reading long passages",
+        "Understanding complicated text",
+        "Remembering what I studied",
+        "Managing study time",
+        "Staying motivated",
+        "Too much information at once",
+        "None of these",
+    },
+    "Q11": {
+        "Phone",
+        "Social media",
+        "Noise",
+        "My own thoughts",
+        "Friends / people around me",
+        "Something else",
+    },
+    "Q12": {
+        "Diagrams, pictures and visual explanations",
+        "Listening to someone explain it",
+        "Reading detailed explanations",
+        "Demonstrations and hands-on examples",
+        "A combination of these",
+    },
+    "Q13": {
+        "Videos",
+        "Podcasts / audio explanations",
+        "Articles / notes",
+        "Interactive demonstrations",
+        "A mixture of these",
+    },
+    "Q14": {
+        "Seeing an example",
+        "Hearing an explanation",
+        "Reading it step-by-step",
+        "Trying it myself",
+        "Discussing it with someone",
+    },
+    "Q19": {
+        "Good grades",
+        "Career / placement",
+        "Curiosity",
+        "Parents / family",
+        "Competition",
+        "Self-improvement",
+    },
+    "Q20": {
+        "Taking a short break",
+        "Encouragement",
+        "Seeing my progress",
+        "Changing the way the topic is explained",
+        "Studying with someone",
+        "A clear goal",
+        "A reward",
+    },
+    "Q23": {
+        "One complete explanation",
+        "Small sections one at a time",
+        "A summary first, then details",
+        "Visual explanation first",
+        "Examples first",
+    },
+}
+
+SINGLE_CHOICE_QUESTION_IDS = {"Q4", "Q6", "Q7", "Q8", "Q9", "Q10", "Q12", "Q13", "Q14", "Q19", "Q23"}
+MULTIPLE_CHOICE_QUESTION_IDS = {"Q18", "Q21", "Q11", "Q20"}
+ALL_QUESTION_IDS = SINGLE_CHOICE_QUESTION_IDS | MULTIPLE_CHOICE_QUESTION_IDS
+
+class QuestionnaireSubmission(BaseModel):
+    """
+    Validates completed 15-question questionnaire responses submitted by the frontend.
+    Accepts payload with either a nested 'answers' dict or direct top-level question fields.
+    """
+    model_config = ConfigDict(extra="ignore")
+
+    submittedAt: Optional[str] = None
+    answers: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+    # Optional direct question fields if submitted directly
+    Q4: Optional[str] = None
+    Q6: Optional[str] = None
+    Q7: Optional[str] = None
+    Q8: Optional[str] = None
+    Q9: Optional[str] = None
+    Q10: Optional[str] = None
+    Q18: Optional[List[str]] = None
+    Q18_other_details: Optional[str] = None
+    Q21: Optional[List[str]] = None
+    Q11: Optional[List[str]] = None
+    Q11_other_details: Optional[str] = None
+    Q12: Optional[str] = None
+    Q13: Optional[str] = None
+    Q14: Optional[str] = None
+    Q19: Optional[str] = None
+    Q20: Optional[List[str]] = None
+    Q23: Optional[str] = None
+
+    def get_normalized_answers(self) -> Dict[str, Any]:
+        """Consolidates and validates answers from nested 'answers' or top-level fields."""
+        raw = {}
+        if self.answers and isinstance(self.answers, dict):
+            raw.update(self.answers)
+        
+        # Merge top-level fields if provided
+        for qid in ALL_QUESTION_IDS:
+            val = getattr(self, qid, None)
+            if val is not None and qid not in raw:
+                raw[qid] = val
+        if self.Q18_other_details and "Q18_other_details" not in raw:
+            raw["Q18_other_details"] = self.Q18_other_details
+        if self.Q11_other_details and "Q11_other_details" not in raw:
+            raw["Q11_other_details"] = self.Q11_other_details
+
+        # Validate that all 15 questions exist
+        missing = [qid for qid in ALL_QUESTION_IDS if qid not in raw or raw[qid] is None]
+        if missing:
+            raise ValueError(f"Missing required questionnaire responses for: {', '.join(sorted(missing))}")
+
+        # Validate each question's answer type and allowed options
+        for qid, val in raw.items():
+            if qid in SINGLE_CHOICE_QUESTION_IDS:
+                if not isinstance(val, str):
+                    raise ValueError(f"Question '{qid}' expects a single choice string, received {type(val).__name__}.")
+                permitted = QUESTIONNAIRE_PERMITTED_OPTIONS[qid]
+                # Normalize dash in Q9 if needed
+                clean_val = val.replace("–", "-")
+                clean_permitted = {p.replace("–", "-") for p in permitted}
+                if clean_val not in clean_permitted:
+                    raise ValueError(f"Invalid option '{val}' for question '{qid}'. Permitted: {sorted(permitted)}")
+
+            elif qid in MULTIPLE_CHOICE_QUESTION_IDS:
+                if not isinstance(val, list) or len(val) == 0:
+                    raise ValueError(f"Question '{qid}' expects a non-empty list of selected choices.")
+                permitted = QUESTIONNAIRE_PERMITTED_OPTIONS[qid]
+                for item in val:
+                    if not isinstance(item, str) or item not in permitted:
+                        raise ValueError(f"Invalid option '{item}' for question '{qid}'. Permitted: {sorted(permitted)}")
+                # Mutual exclusivity check for Q21 "None of these"
+                if qid == "Q21" and "None of these" in val and len(val) > 1:
+                    raise ValueError("Question 'Q21' option 'None of these' cannot be selected alongside other options.")
+
+            elif qid in ("Q18_other_details", "Q11_other_details"):
+                if val is not None and not isinstance(val, str):
+                    raise ValueError(f"Field '{qid}' must be a string description.")
+
+        return raw
+
+
+class LearnerProfileResponse(BaseModel):
+    """Clean API response model for a learner profile."""
+    id: Optional[str] = Field(default=None, alias="_id", description="MongoDB Profile Identifier")
+    user_id: str
+    learning_goals: List[str] = Field(default_factory=list)
+    preferred_explanation_style: ExplanationStyle = ExplanationStyle.SIMPLE
+    study_preferences: StudyPreferences = Field(default_factory=StudyPreferences)
+    strengths: List[str] = Field(default_factory=list)
+    areas_for_improvement: List[str] = Field(default_factory=list)
+    attention_preferences: AttentionPreferences = Field(default_factory=AttentionPreferences)
+    accessibility_settings: AccessibilitySettings = Field(default_factory=AccessibilitySettings)
+    questionnaire_responses: Optional[Dict[str, Any]] = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        extra="ignore"
+    )
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def validate_id(cls, v: Any) -> Optional[str]:
+        return validate_object_id_str(v)
+
+
+def derive_learner_profile_from_questionnaire(user_id: str, answers: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Derives Sprint 1 pedagogical preferences and settings from the 15 questionnaire responses
+    while preserving the raw answers for future AI personalization.
+    """
+    # 1. Preferred Explanation Style
+    # Derived from Q14 ("When a topic is difficult, what helps you most?") & Q12
+    q14 = answers.get("Q14", "")
+    q12 = answers.get("Q12", "")
+    if q14 == "Seeing an example" or "Diagrams, pictures" in q12:
+        style = ExplanationStyle.VISUAL
+    elif q14 == "Reading it step-by-step":
+        style = ExplanationStyle.STEP_BY_STEP
+    elif q14 == "Discussing it with someone":
+        style = ExplanationStyle.ANALOGY
+    elif q14 == "Trying it myself":
+        style = ExplanationStyle.DETAILED
+    else:
+        style = ExplanationStyle.SIMPLE
+
+    # 2. Study Preferences
+    # Derived from Q9 focus duration and Q23 pace
+    q9 = str(answers.get("Q9", "")).replace("–", "-")
+    duration_map = {
+        "less than 15 minutes": 15,
+        "15-30 minutes": 25,
+        "30-45 minutes": 35,
+        "45-60 minutes": 50,
+        "more than 60 minutes": 60,
+    }
+    session_duration = duration_map.get(q9.lower(), 25)
+
+    q23 = answers.get("Q23", "")
+    if q23 == "Small sections one at a time":
+        pace = LearningPace.GENTLE
+    elif q23 == "One complete explanation":
+        pace = LearningPace.INTENSIVE
+    else:
+        pace = LearningPace.MODERATE
+
+    study_prefs = StudyPreferences(
+        session_duration_minutes=session_duration,
+        break_duration_minutes=5,
+        learning_pace=pace,
+        reminder_frequency=ReminderFrequency.NORMAL
+    )
+
+    # 3. Areas for Improvement (from Q18 difficult subjects)
+    difficult_subjects = [s for s in answers.get("Q18", []) if s != "Other"]
+    if "Other" in answers.get("Q18", []) and answers.get("Q18_other_details"):
+        difficult_subjects.append(answers["Q18_other_details"])
+
+    # 4. Attention Preferences (from Q20 and Q21)
+    q20 = answers.get("Q20", [])
+    prefer_breaks = "Taking a short break" in q20 or session_duration <= 25
+    attention_prefs = AttentionPreferences(
+        prefer_break_reminders=prefer_breaks,
+        break_reminder_interval_minutes=session_duration,
+        background_sounds=BackgroundSound.NONE
+    )
+
+    # 5. Accessibility Settings (defaults)
+    accessibility = AccessibilitySettings()
+
+    now = utc_now()
+
+    return {
+        "user_id": user_id,
+        "learning_goals": [],
+        "preferred_explanation_style": style.value,
+        "study_preferences": study_prefs.model_dump(),
+        "strengths": [],
+        "areas_for_improvement": difficult_subjects,
+        "attention_preferences": attention_prefs.model_dump(),
+        "accessibility_settings": accessibility.model_dump(),
+        "questionnaire_responses": answers,
+        "created_at": now,
+        "updated_at": now
+    }
+

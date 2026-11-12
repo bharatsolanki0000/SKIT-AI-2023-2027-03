@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routes import auth, health
+from app.routes import auth, health, profiles
 from app.database import (
     is_mongodb_configured,
     ping_database,
@@ -69,6 +69,7 @@ app.add_middleware(
 # Register routes
 app.include_router(auth.router)
 app.include_router(health.router)
+app.include_router(profiles.router)
 
 
 @app.get("/", tags=["Health"])
