@@ -18,16 +18,16 @@ export default function StudentDashboard({ onNavigate }) {
   const [selectedStudyParams, setSelectedStudyParams] = useState(null);
   const [activeFeatureModal, setActiveFeatureModal] = useState(null); // 'simpler' | 'quiz' | 'motivation' | 'break' | 'progress'
 
-  // Student name: retrieve from storage or default to reference Alex
+  // Student name: retrieve from storage or default to reference Aditi
   const [studentName] = useState(() => {
     try {
       return (
         localStorage.getItem('camber_user_name') ||
         localStorage.getItem('camber_student_name') ||
-        'Alex'
+        'Aditi'
       );
     } catch {
-      return 'Alex';
+      return 'Aditi';
     }
   });
 

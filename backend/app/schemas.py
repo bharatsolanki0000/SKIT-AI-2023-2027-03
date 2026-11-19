@@ -110,6 +110,11 @@ class SupportedEmotion(str, Enum):
     CALM = "calm"
     CURIOUS = "curious"
     OVERWHELMED = "overwhelmed"
+    # Sprint 4 Primary Labels
+    STRESS = "stress"
+    BOREDOM = "boredom"
+    CONFUSION = "confusion"
+    ENGAGEMENT = "engagement"
 
 class AssistanceType(str, Enum):
     EXPLAIN_SIMPLY = "explain_simply"
@@ -117,6 +122,8 @@ class AssistanceType(str, Enum):
     SUGGEST_BREAK = "suggest_break"
     EMOTION_CHECK = "emotion_check"
     PACING_ADJUSTMENT = "pacing_adjustment"
+    MOTIVATIONAL_MESSAGE = "motivational_message"
+    LEARNING_ACTIVITY = "learning_activity"
 
 
 # -----------------------------------------------------------------------------
@@ -209,11 +216,11 @@ class EmotionEvent(BaseModel):
         ...,
         description="Predicted emotion / engagement state from the verified AI model"
     )
-    confidence: float = Field(
-        ...,
+    confidence: Optional[float] = Field(
+        default=None,
         ge=0.0,
         le=1.0,
-        description="Confidence score output from the classifier (bounded between 0.0 and 1.0)"
+        description="Confidence score output from the classifier (bounded between 0.0 and 1.0, only when genuinely available)"
     )
     model_version: Optional[str] = Field(
         default="MobileNetV2_Transfer_v1",
@@ -225,8 +232,17 @@ class EmotionEvent(BaseModel):
     def normalize_label(cls, v: Any) -> Any:
         if isinstance(v, str):
             clean = v.strip().lower().replace(" ", "_")
-            # Map common synonyms
-            if clean == "looking_away":
+            if clean in ("confusion", "confused"):
+                return SupportedEmotion.CONFUSED
+            if clean in ("engagement", "engaged", "focused"):
+                return SupportedEmotion.ENGAGED
+            if clean in ("stress", "stressed", "frustrated"):
+                return SupportedEmotion.STRESSED
+            if clean in ("boredom", "bored"):
+                return SupportedEmotion.BORED
+            if clean in ("drowsy", "fatigued"):
+                return SupportedEmotion.DROWSY
+            if clean in ("looking_away", "looking away"):
                 return SupportedEmotion.LOOKING_AWAY
             return clean
         return v
@@ -251,6 +267,24 @@ class AssistanceEvent(BaseModel):
         default_factory=dict,
         description="Minimal structured metadata about the assistance outcome (no raw biometric data)"
     )
+
+    @field_validator("assistance_type", mode="before")
+    @classmethod
+    def normalize_assistance_type(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            clean = v.strip().lower().replace(" ", "_")
+            if clean in ("simpler_explanation", "simpler", "simple_explanation"):
+                return AssistanceType.EXPLAIN_SIMPLY
+            if clean in ("break_suggestion", "break", "take_break"):
+                return AssistanceType.SUGGEST_BREAK
+            if clean in ("quick_quiz", "quiz", "quiz_suggestion"):
+                return AssistanceType.GENERATE_QUIZ
+            if clean in ("motivation", "motivational", "motivational_message"):
+                return AssistanceType.MOTIVATIONAL_MESSAGE
+            if clean in ("activity", "learning_activity", "learning_activity_recommendation"):
+                return AssistanceType.LEARNING_ACTIVITY
+            return clean
+        return v
 
 class SessionSummary(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -988,6 +1022,10 @@ class StudySessionBase(BaseModel):
         default=SessionStatus.ACTIVE,
         description="Current operational lifecycle status of the session"
     )
+    study_material_context: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Optional study topic, subject, or learning material metadata"
+    )
     emotion_events: List[EmotionEvent] = Field(
         default_factory=list,
         max_length=500,
@@ -1021,11 +1059,13 @@ class StudySessionCreate(BaseModel):
     learner_profile_id: Optional[str] = None
     started_at: datetime = Field(default_factory=utc_now)
     status: SessionStatus = SessionStatus.ACTIVE
+    study_material_context: Optional[Dict[str, Any]] = None
 
 class StudySessionUpdate(BaseModel):
     ended_at: Optional[datetime] = None
     status: Optional[SessionStatus] = None
     session_summary: Optional[Union[SessionSummary, str]] = None
+    study_material_context: Optional[Dict[str, Any]] = None
 
 class StudySessionDocument(StudySessionBase):
     id: Optional[str] = Field(default=None, alias="_id", description="MongoDB Session Identifier")
@@ -1041,6 +1081,125 @@ class StudySessionDocument(StudySessionBase):
     @classmethod
     def validate_id(cls, v: Any) -> Optional[str]:
         return validate_object_id_str(v)
+
+
+# -----------------------------------------------------------------------------
+# SPRINT 4: STUDY SESSION API REQUEST & RESPONSE MODELS
+# -----------------------------------------------------------------------------
+
+class StartSessionRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    learner_profile_id: Optional[str] = None
+    study_material_context: Optional[Dict[str, Any]] = None
+
+    @field_validator("learner_profile_id", mode="before")
+    @classmethod
+    def validate_profile_id(cls, v: Any) -> Optional[str]:
+        if v is None or v == "":
+            return None
+        return validate_object_id_str(v)
+
+
+class StartSessionResponse(BaseModel):
+    session_id: str
+    user_id: str
+    started_at: datetime
+    status: SessionStatus = SessionStatus.ACTIVE
+    learner_profile_id: Optional[str] = None
+    study_material_context: Optional[Dict[str, Any]] = None
+
+
+class RecordEmotionRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    predicted_label: SupportedEmotion
+    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    timestamp: Optional[datetime] = None
+    model_version: Optional[str] = "MobileNetV2_Transfer_v1"
+    context: Optional[Dict[str, Any]] = None
+
+    @field_validator("predicted_label", mode="before")
+    @classmethod
+    def normalize_label(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            clean = v.strip().lower().replace(" ", "_")
+            if clean in ("confusion", "confused"):
+                return SupportedEmotion.CONFUSED
+            if clean in ("engagement", "engaged", "focused"):
+                return SupportedEmotion.ENGAGED
+            if clean in ("stress", "stressed", "frustrated"):
+                return SupportedEmotion.STRESSED
+            if clean in ("boredom", "bored"):
+                return SupportedEmotion.BORED
+            if clean in ("drowsy", "fatigued"):
+                return SupportedEmotion.DROWSY
+            if clean in ("looking_away", "looking away"):
+                return SupportedEmotion.LOOKING_AWAY
+            return clean
+        return v
+
+
+class RecordAssistanceRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    assistance_type: AssistanceType
+    reason: Optional[str] = Field(default=None, max_length=250)
+    action_details: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    timestamp: Optional[datetime] = None
+
+    @field_validator("assistance_type", mode="before")
+    @classmethod
+    def normalize_type(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            clean = v.strip().lower().replace(" ", "_")
+            if clean in ("simpler_explanation", "simpler", "simple_explanation"):
+                return AssistanceType.EXPLAIN_SIMPLY
+            if clean in ("break_suggestion", "break", "take_break"):
+                return AssistanceType.SUGGEST_BREAK
+            if clean in ("quick_quiz", "quiz", "quiz_suggestion"):
+                return AssistanceType.GENERATE_QUIZ
+            if clean in ("motivation", "motivational", "motivational_message"):
+                return AssistanceType.MOTIVATIONAL_MESSAGE
+            if clean in ("activity", "learning_activity", "learning_activity_recommendation"):
+                return AssistanceType.LEARNING_ACTIVITY
+            return clean
+        return v
+
+
+class EndSessionRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    notes: Optional[str] = Field(default=None, max_length=1000)
+    session_summary: Optional[Union[SessionSummary, str]] = None
+
+
+class StudySessionResponse(BaseModel):
+    id: Optional[str] = Field(default=None, alias="_id", description="MongoDB Session Identifier")
+    session_id: Optional[str] = None
+    user_id: str
+    learner_profile_id: Optional[str] = None
+    started_at: datetime
+    ended_at: Optional[datetime] = None
+    duration_seconds: Optional[int] = None
+    total_duration_minutes: Optional[int] = None
+    status: SessionStatus
+    study_material_context: Optional[Dict[str, Any]] = None
+    emotion_events: List[EmotionEvent] = Field(default_factory=list)
+    assistance_events: List[AssistanceEvent] = Field(default_factory=list)
+    session_summary: Optional[Union[SessionSummary, str]] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    model_config = ConfigDict(populate_by_name=True, extra="ignore")
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def validate_id(cls, v: Any) -> Optional[str]:
+        return validate_object_id_str(v)
+
+
+class SessionHistoryResponse(BaseModel):
+    sessions: List[StudySessionResponse]
+    total: int
+    limit: int
+    skip: int
 
 
 # =============================================================================

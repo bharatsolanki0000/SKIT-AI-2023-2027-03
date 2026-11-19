@@ -1,7 +1,7 @@
 import React from 'react';
 import camberPeekingImg from '../../assets/camber-peeking.png';
 
-export default function WelcomeBanner({ studentName = 'Alex' }) {
+export default function WelcomeBanner({ studentName = 'Aditi' }) {
   // Determine time of day greeting
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -21,7 +21,7 @@ export default function WelcomeBanner({ studentName = 'Alex' }) {
     });
   };
 
-  const displayName = studentName || 'Alex';
+  const displayName = studentName || 'Aditi';
 
   return (
     <section className="welcome-banner-card" aria-label="Welcome Banner">

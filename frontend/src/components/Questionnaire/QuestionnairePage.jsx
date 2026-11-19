@@ -158,9 +158,9 @@ export default function QuestionnairePage({ onNavigate }) {
   // Final completion CTA navigation
   const handleFinish = () => {
     if (onNavigate) {
-      onNavigate('/');
+      onNavigate('/dashboard');
     } else {
-      window.history.pushState({}, '', '/');
+      window.history.pushState({}, '', '/dashboard');
       window.dispatchEvent(new PopStateEvent('popstate'));
     }
   };

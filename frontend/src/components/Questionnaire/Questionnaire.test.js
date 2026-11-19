@@ -241,7 +241,7 @@ describe('CAMBER Onboarding Questionnaire Suite', () => {
     });
     fireEvent.click(startLearningBtn);
 
-    // Expect navigation back to home
-    expect(mockNavigate).toHaveBeenCalledWith('/');
+    // Expect navigation to student dashboard
+    expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
   });
 });

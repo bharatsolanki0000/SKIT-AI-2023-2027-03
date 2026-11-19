@@ -4,13 +4,20 @@ import camberLogo from '../assets/camber-logo.png';
 export default function Navbar({ onNavigate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeNav, setActiveNav] = useState('home');
+  const [hasCompletedProfile] = useState(() => {
+    try {
+      return localStorage.getItem('camber_learner_profile_completed') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   const navLinks = [
     { id: 'home', label: 'Home', href: '#home' },
     { id: 'about', label: 'About', href: '#what-is-camber' },
     { id: 'features', label: 'Features', href: '#features' },
     { id: 'how-it-works', label: 'How It Works', href: '#how-it-works' },
-    { id: 'dashboard', label: 'Dashboard', href: '/dashboard', isRoute: true },
+    ...(hasCompletedProfile ? [{ id: 'dashboard', label: 'Dashboard', href: '/dashboard', isRoute: true }] : []),
     { id: 'faq', label: 'FAQ', href: '#faq' },
   ];
 
