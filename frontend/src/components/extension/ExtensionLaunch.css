@@ -1,0 +1,1063 @@
+/* ==========================================================================
+   CAMBER — Study Launch & Chrome Extension Setup Page Styles
+   Storybook watercolor instruction booklet aesthetic
+   Palette:
+     Deep chocolate brown: #75452F
+     Warm dark brown:      #68412E
+     Pale cornflower blue: #D9EAF8
+     Soft sky blue:        #A9CBEA
+     Warm cream:           #FFF8E9 / #FFFDF8
+     Butter yellow:        #FFF0C2
+     Muted sage:           #A9BC91
+     Soft green:           #7E9C79
+     Soft peach:           #F5C5B5
+   ========================================================================== */
+
+/* Page Outer Canvas */
+.camber-extension-launch-page {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #FFF8E9;
+  background-image: 
+    radial-gradient(#F7ECD2 1px, transparent 1px),
+    radial-gradient(#F5E7C8 1px, #FFF8E9 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  color: #68412E;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  padding: 24px 32px 48px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Top Header: Brand + Handwritten Motivational Note
+   ========================================================================== */
+.launch-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 0 12px;
+}
+
+.header-brand-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.header-brand-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.header-brand-btn:focus-visible {
+  outline: 2px solid #68412E;
+  outline-offset: 4px;
+}
+
+.brand-wordmark {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #68412E;
+  letter-spacing: 0.5px;
+}
+
+.brand-paw-icon {
+  color: #68412E;
+  display: flex;
+  align-items: center;
+}
+
+/* Top-Right Handwritten Encouragement */
+.header-handwritten-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 240, 194, 0.45);
+  border: 1px dashed #E5CD8B;
+  padding: 6px 14px;
+  border-radius: 20px;
+  transform: rotate(-1deg);
+}
+
+.handwritten-lines {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.hw-line {
+  font-family: 'Caveat', 'Comic Sans MS', 'Brush Script MT', cursive, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #75452F;
+}
+
+.handwritten-icons {
+  display: flex;
+  gap: 3px;
+  font-size: 15px;
+}
+
+/* ==========================================================================
+   Three-Panel Cards Stage (Desktop Horizontal Grid)
+   ========================================================================== */
+.launch-cards-container {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  align-items: stretch;
+  flex: 1;
+}
+
+/* Base Card Shell */
+.launch-card {
+  border-radius: 26px;
+  padding: 18px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 12px 28px rgba(104, 65, 46, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.launch-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(104, 65, 46, 0.12);
+}
+
+/* Card 1 & Card 3: Pale Cornflower Blue Outer Background */
+.card-welcome,
+.card-setup-connect {
+  background-color: #D9EAF8;
+  border: 1.5px solid #C4DCF2;
+}
+
+/* Card 2: Pale Butter Yellow Outer Background */
+.card-why-extension {
+  background-color: #FFF0C2;
+  border: 1.5px solid #F5E1A4;
+}
+
+/* Outer Card Top Bar */
+.card-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 6px 12px;
+  min-height: 32px;
+}
+
+.card-top-bar-split {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.card-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-brand-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.card-brand-text {
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #68412E;
+  letter-spacing: 0.4px;
+}
+
+/* Steps Away Handwritten Badge (Card 3 Upper Right) */
+.steps-away-handwritten {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFDF8;
+  border: 1px dashed #C4DCF2;
+  padding: 4px 10px;
+  border-radius: 14px;
+  transform: rotate(1.5deg);
+}
+
+.steps-away-text {
+  font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif;
+  font-size: 13px;
+  line-height: 1.15;
+  font-weight: 700;
+  color: #68412E;
+  text-align: right;
+}
+
+.steps-away-decor {
+  font-size: 13px;
+}
+
+/* ==========================================================================
+   Inner Content Surface (Warm Cream Booklet Page)
+   ========================================================================== */
+.card-inner-surface {
+  background-color: #FFFDF8;
+  border-radius: 20px;
+  padding: 24px 20px 20px;
+  border: 1px solid rgba(230, 215, 190, 0.4);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.8), 0 2px 6px rgba(104, 65, 46, 0.04);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+}
+
+/* Headings & Hand-Drawn Underline */
+.card-heading-group {
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #68412E;
+  margin: 0;
+}
+
+.handdrawn-underline {
+  margin-top: 4px;
+  display: block;
+}
+
+.card-subtext {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #75452F;
+  margin: 0 0 18px;
+}
+
+.card-subtext-intro {
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+/* Friendly Alerts in Card 3 */
+.extension-friendly-alert {
+  background-color: #FEF6E4;
+  border: 1px solid #F5D38A;
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: #68412E;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeIn 0.25s ease;
+}
+
+.alert-paw {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.banner-feedback-alert {
+  background-color: #FFF3CD;
+  border: 1px solid #FFE08A;
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: #68412E;
+  text-align: center;
+  font-weight: 500;
+  animation: fadeIn 0.25s ease;
+}
+
+/* ==========================================================================
+   CARD 1 SPECIFIC STYLING: Welcome Mascot Stage
+   ========================================================================== */
+.welcome-mascot-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  min-height: 280px;
+  margin-top: 10px;
+}
+
+.buddy-handwritten-note {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: #FFF8E9;
+  border: 1px dashed #E5CD8B;
+  padding: 6px 12px;
+  border-radius: 14px;
+  transform: rotate(4deg);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(104, 65, 46, 0.06);
+  z-index: 2;
+}
+
+.note-text {
+  font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #75452F;
+}
+
+.note-heart {
+  color: #D8785E;
+  font-size: 15px;
+}
+
+.mascot-figure-wrapper {
+  width: 100%;
+  max-width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1;
+}
+
+.camber-reading-figure {
+  width: 100%;
+  height: auto;
+  max-height: 270px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.camber-reading-figure:hover {
+  transform: scale(1.02);
+}
+
+.card-botanical-decor {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.decor-flower-left {
+  margin-left: -4px;
+}
+
+.decor-flower-right {
+  margin-right: -4px;
+}
+
+/* ==========================================================================
+   CARD 2 SPECIFIC STYLING: 3 Vertically Stacked Benefit Boxes
+   ========================================================================== */
+.benefits-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.benefit-box {
+  background-color: #EBF4FA;
+  border: 1px solid #D2E4F3;
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 6px rgba(104, 65, 46, 0.03);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.benefit-box:hover {
+  transform: translateY(-1.5px);
+  border-color: #A9CBEA;
+}
+
+.benefit-badge-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #FFF0C2;
+  border: 1px solid #E5CD8B;
+  color: #68412E;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.benefit-artwork {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mini-bulb-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.glowing-bulb-icon {
+  position: absolute;
+  top: -4px;
+  animation: gentlePulse 2.5s infinite alternate ease-in-out;
+}
+
+.benefit-mascot-img {
+  width: 36px;
+  height: 32px;
+  object-fit: contain;
+  margin-top: 14px;
+}
+
+.benefit-content {
+  flex: 1;
+}
+
+.benefit-heading {
+  font-family: 'Georgia', serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #68412E;
+  margin: 0 0 3px;
+  line-height: 1.25;
+}
+
+.benefit-desc {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #75452F;
+  margin: 0;
+}
+
+.benefit-corner-plant {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   CARD 3 SPECIFIC STYLING: Setup & Connect Steps + Banner
+   ========================================================================== */
+.setup-areas-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.setup-area-box {
+  background-color: #FFFDF8;
+  border: 1px solid #E4EDF5;
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 2px 6px rgba(104, 65, 46, 0.03);
+}
+
+.area-install,
+.area-connect {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.setup-box-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+}
+
+.step-circle-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #D9EAF8;
+  border: 1px solid #A9CBEA;
+  color: #1F4A6E;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-text-wrap {
+  flex: 1;
+}
+
+.setup-step-heading {
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #68412E;
+  margin: 0 0 3px;
+  line-height: 1.25;
+}
+
+.setup-step-desc {
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: #75452F;
+  margin: 0;
+}
+
+.setup-box-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.chrome-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Green "Add to Chrome" Pill Button */
+.btn-add-to-chrome {
+  background-color: #5C946E;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(92, 148, 110, 0.3);
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-add-to-chrome:hover {
+  background-color: #4A845C;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(92, 148, 110, 0.4);
+}
+
+.btn-add-to-chrome:active {
+  transform: translateY(0);
+}
+
+.btn-add-to-chrome:focus-visible {
+  outline: 2px solid #68412E;
+  outline-offset: 2px;
+}
+
+.puzzle-icon {
+  font-size: 13px;
+}
+
+/* Mini Browser Extension Popup Replica */
+.mini-extension-popup-replica {
+  background: #FFFFFF;
+  border: 1px solid #D2E4F3;
+  border-radius: 12px;
+  padding: 6px 10px;
+  box-shadow: 0 2px 8px rgba(104, 65, 46, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 140px;
+}
+
+.replica-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px solid #EEF4F9;
+  padding-bottom: 3px;
+}
+
+.replica-puzzle {
+  font-size: 12px;
+}
+
+.replica-brand {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.replica-logo {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+
+.replica-name {
+  font-family: 'Georgia', serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #68412E;
+}
+
+.replica-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.replica-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status-indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-gray {
+  background-color: #A0AEC0;
+}
+
+.dot-amber {
+  background-color: #E2B93B;
+  animation: pulseDot 1s infinite alternate ease-in-out;
+}
+
+.dot-green {
+  background-color: #38A169;
+}
+
+.status-disconnected {
+  color: #718096;
+}
+
+.status-checking {
+  color: #B7791F;
+}
+
+.status-connected {
+  color: #2F855A;
+  font-weight: 600;
+}
+
+.btn-check-connection {
+  background: #EBF4FA;
+  border: 1px solid #CBDDEB;
+  color: #2D587B;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-check-connection:hover:not(:disabled) {
+  background: #D9EAF8;
+}
+
+.btn-check-connection:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* AREA 3: Study Material Section */
+.area-study-material {
+  background-color: #EBF4FA;
+  border: 1px solid #D2E4F3;
+}
+
+.study-material-title {
+  font-family: 'Georgia', serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #68412E;
+  margin: 0 0 8px;
+}
+
+.study-material-three-cols {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.material-col-left {
+  flex-shrink: 0;
+}
+
+.material-pdf-graphic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.pdf-doc-sheet {
+  width: 32px;
+  height: 40px;
+  background: #FFFFFF;
+  border: 1px solid #CADDEE;
+  border-radius: 4px;
+  padding: 4px 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.pdf-red-tag {
+  background: #E76F51;
+  color: #FFFFFF;
+  font-size: 7px;
+  font-weight: bold;
+  border-radius: 2px;
+  text-align: center;
+  padding: 1px 0;
+  font-family: sans-serif;
+}
+
+.pdf-sheet-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+  margin-top: 2px;
+}
+
+.ps-line {
+  height: 1.5px;
+  background: #D3E4F2;
+  border-radius: 1px;
+  width: 100%;
+}
+
+.ps-line.short {
+  width: 60%;
+}
+
+.pdf-only-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #8C5338;
+}
+
+.material-col-centre {
+  flex: 1;
+}
+
+.material-instruction-text {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #75452F;
+  margin: 0;
+}
+
+.material-col-right {
+  flex-shrink: 0;
+}
+
+.browser-window-mini {
+  width: 64px;
+  height: 44px;
+  background: #FFFFFF;
+  border: 1px solid #CADDEE;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.browser-title-bar {
+  background: #EEF4F9;
+  border-bottom: 1px solid #CADDEE;
+  height: 11px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 4px;
+}
+
+.browser-dot {
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+}
+
+.dot-red { background: #E76F51; }
+.dot-yellow { background: #F4A261; }
+.dot-green { background: #7E9C79; }
+
+.browser-tab-chip {
+  font-size: 6px;
+  background: #FFFFFF;
+  border-radius: 2px 2px 0 0;
+  padding: 0 3px;
+  color: #555;
+  margin-left: 2px;
+  font-family: sans-serif;
+}
+
+.browser-viewport-inner {
+  flex: 1;
+  background: #FAF8F5;
+  padding: 3px 5px;
+}
+
+.browser-pdf-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+}
+
+.bp-header {
+  height: 2.5px;
+  background: #E76F51;
+  width: 50%;
+  border-radius: 1px;
+}
+
+.bp-row {
+  height: 2px;
+  background: #D3E4F2;
+  border-radius: 1px;
+  width: 100%;
+}
+
+.bp-row.half {
+  width: 70%;
+}
+
+/* ==========================================================================
+   Bottom Start Studying Banner
+   ========================================================================== */
+.start-studying-banner {
+  background-color: #FFF0C2;
+  border: 1.5px solid #F5E1A4;
+  border-radius: 18px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(104, 65, 46, 0.08);
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+}
+
+.start-studying-banner:hover {
+  background-color: #FFECAE;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(104, 65, 46, 0.12);
+}
+
+.start-studying-banner:active {
+  transform: translateY(0);
+}
+
+.start-studying-banner:focus-visible {
+  outline: 2px solid #68412E;
+  outline-offset: 2px;
+}
+
+.banner-mascot-left {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.banner-mascot-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.banner-text-right {
+  flex: 1;
+}
+
+.banner-heading {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #68412E;
+  margin: 0 0 2px;
+}
+
+.banner-subtext {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8C5338;
+  margin: 0;
+}
+
+.banner-decor-plants {
+  position: absolute;
+  right: 6px;
+  bottom: 0;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Keyframe Animations
+   ========================================================================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gentlePulse {
+  from { transform: scale(1); opacity: 0.9; }
+  to { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes pulseDot {
+  from { opacity: 0.5; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.1); }
+}
+
+/* ==========================================================================
+   Responsive Design Rules
+   ========================================================================== */
+
+/* Tablets & Medium Screens: 2 Columns */
+@media (max-width: 1080px) {
+  .launch-cards-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .card-setup-connect {
+    grid-column: span 2;
+  }
+}
+
+/* Mobile Screens: Clean Single-Column Stack */
+@media (max-width: 768px) {
+  .camber-extension-launch-page {
+    padding: 16px 14px 32px;
+  }
+
+  .launch-page-header {
+    margin-bottom: 18px;
+    padding: 0 4px;
+  }
+
+  .brand-wordmark {
+    font-size: 22px;
+  }
+
+  .header-handwritten-note {
+    padding: 4px 10px;
+  }
+
+  .hw-line {
+    font-size: 14px;
+  }
+
+  .launch-cards-container {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .card-setup-connect {
+    grid-column: span 1;
+  }
+
+  .card-inner-surface {
+    padding: 18px 14px 16px;
+  }
+
+  .card-title {
+    font-size: 20px;
+  }
+
+  .welcome-mascot-stage {
+    min-height: 220px;
+  }
+
+  .camber-reading-figure {
+    max-height: 200px;
+  }
+
+  .area-install,
+  .area-connect {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .setup-box-right {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 6px;
+  }
+
+  .study-material-three-cols {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
