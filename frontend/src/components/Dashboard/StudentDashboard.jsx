@@ -67,6 +67,16 @@ export default function StudentDashboard({ onNavigate }) {
     setIsExtModalOpen(true);
   };
 
+  const handleStartStudying = (params) => {
+    if (params) setSelectedStudyParams(params);
+    if (onNavigate) {
+      onNavigate('/extension');
+    } else {
+      window.history.pushState({}, '', '/extension');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }
+  };
+
   const handleEditPreferences = () => {
     if (onNavigate) {
       onNavigate('/questionnaire');
@@ -100,7 +110,7 @@ export default function StudentDashboard({ onNavigate }) {
         onSelectTab={(tabId) => {
           setActiveTab(tabId);
           if (tabId === 'study-space') {
-            setIsExtModalOpen(true);
+            handleStartStudying();
           } else if (tabId === 'my-progress') {
             setActiveFeatureModal('progress');
           } else if (tabId === 'settings') {
@@ -191,7 +201,11 @@ export default function StudentDashboard({ onNavigate }) {
             <WelcomeBanner studentName={studentName} />
 
             {/* B. Study Space Card */}
-            <StudySpaceCard onConnectExtension={handleConnectExtension} />
+            <StudySpaceCard
+              onConnectExtension={handleConnectExtension}
+              onStartStudying={handleStartStudying}
+              onNavigate={onNavigate}
+            />
 
             {/* C. Your Learning Snapshot */}
             <LearningSnapshot onViewDetails={handleViewProgress} />
@@ -224,6 +238,7 @@ export default function StudentDashboard({ onNavigate }) {
         isOpen={isExtModalOpen}
         onClose={() => setIsExtModalOpen(false)}
         studyParams={selectedStudyParams}
+        onNavigate={onNavigate}
       />
 
       {/* Feature Interaction Modals (Polished, Restrained Popups for Unbuilt Destinations) */}

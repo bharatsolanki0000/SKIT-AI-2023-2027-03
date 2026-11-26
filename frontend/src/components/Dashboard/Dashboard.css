@@ -575,6 +575,34 @@
   transform: translateY(0);
 }
 
+.btn-start-studying-cta {
+  background-color: #5C946E;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(92, 148, 110, 0.2);
+  margin-top: 8px;
+}
+
+.btn-start-studying-cta:hover {
+  background-color: #4A845C;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(92, 148, 110, 0.3);
+}
+
+.btn-start-studying-cta:active {
+  transform: translateY(0);
+}
+
 /* --------------------------------------------------------------------------
    Center Column 3: Learning Snapshot
    -------------------------------------------------------------------------- */

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function ExtensionConnectModal({ isOpen, onClose, studyParams }) {
+export default function ExtensionConnectModal({ isOpen, onClose, studyParams, onNavigate }) {
   const [connectionStatus, setConnectionStatus] = useState('checking'); // 'checking' | 'not_detected' | 'connected'
   const [checkCount, setCheckCount] = useState(0);
 
@@ -123,6 +123,7 @@ export default function ExtensionConnectModal({ isOpen, onClose, studyParams }) 
           >
             Check Again 🔄
           </button>
+          
           <button
             type="button"
             className="btn-modal-primary"

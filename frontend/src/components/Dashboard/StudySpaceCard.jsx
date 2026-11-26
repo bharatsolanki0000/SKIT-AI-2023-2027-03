@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function StudySpaceCard({ onConnectExtension }) {
+export default function StudySpaceCard({ onConnectExtension, onStartStudying, onNavigate }) {
   const [topic, setTopic] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [studyDuration, setStudyDuration] = useState('25');
@@ -170,7 +170,7 @@ export default function StudySpaceCard({ onConnectExtension }) {
             </div>
           </div>
 
-          {/* Primary Action Button */}
+          {/* Primary Action Buttons */}
           <button
             type="button"
             className="btn-connect-extension-cta"
@@ -179,6 +179,8 @@ export default function StudySpaceCard({ onConnectExtension }) {
             <span>Connect with CAMBER Extension</span>
             <span aria-hidden="true">&rarr;</span>
           </button>
+
+          
         </div>
       </div>
     </section>

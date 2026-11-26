@@ -15,6 +15,7 @@ import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
 import QuestionnairePage from './components/Questionnaire/QuestionnairePage';
 import StudentDashboard from './components/Dashboard/StudentDashboard';
+import ExtensionLaunchPage from './components/extension/ExtensionLaunchPage';
 import './App.css';
 
 function normalizeRoute(pathname) {
@@ -23,6 +24,7 @@ function normalizeRoute(pathname) {
   if (clean === '/signup' || clean === '/register') return '/signup';
   if (clean === '/questionnaire' || clean === '/onboarding' || clean === '/journal') return '/questionnaire';
   if (clean === '/dashboard' || clean === '/student-dashboard') return '/dashboard';
+  if (clean === '/extension' || clean === '/study-launch' || clean === '/extension-setup' || clean === '/start-studying') return '/extension';
   return '/';
 }
 
@@ -73,6 +75,11 @@ function App() {
   // Route 5: /dashboard — Student Dashboard
   if (currentRoute === '/dashboard') {
     return <StudentDashboard onNavigate={navigate} />;
+  }
+
+  // Route 6: /extension — Study Launch & Chrome Extension Setup Page
+  if (currentRoute === '/extension') {
+    return <ExtensionLaunchPage onNavigate={navigate} />;
   }
 
   // Route 1: / — Original CAMBER Landing Page
