@@ -28,9 +28,9 @@ class SignupResponse(BaseModel):
 
 class LoginResponse(BaseModel):
     message: str = Field(default="Login successful", json_schema_extra={"example": "Login successful"})
-    idToken: str = Field(..., json_schema_extra={"example": "eyJhbGciOiJSUzI1NiIs..."})
-    refreshToken: str = Field(..., json_schema_extra={"example": "AMf-vBy..."})
-    expiresIn: str = Field(..., json_schema_extra={"example": "3600"})
+    access_token: str = Field(..., json_schema_extra={"example": "eyJhbGciOiJIUzI1NiIs..."})
+    token_type: str = Field(default="bearer", json_schema_extra={"example": "bearer"})
+    expires_in: int = Field(..., json_schema_extra={"example": 3600})
     user: UserResponse
 
 class ErrorResponse(BaseModel):
