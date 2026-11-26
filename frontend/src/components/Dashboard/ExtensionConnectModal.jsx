@@ -124,6 +124,19 @@ export default function ExtensionConnectModal({ isOpen, onClose, studyParams, on
             Check Again 🔄
           </button>
           
+          {onNavigate && (
+                      <button
+                        type="button"
+                        className="btn-modal-secondary"
+                        onClick={() => {
+                          onClose();
+                          onNavigate('/extension');
+                        }}
+                      >
+                        Full Setup Guide 📖
+                      </button>
+                    )}
+
           <button
             type="button"
             className="btn-modal-primary"
