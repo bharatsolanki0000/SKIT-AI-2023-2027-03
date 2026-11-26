@@ -179,7 +179,24 @@ export default function StudySpaceCard({ onConnectExtension, onStartStudying, on
             <span>Connect with CAMBER Extension</span>
             <span aria-hidden="true">&rarr;</span>
           </button>
-
+          <button
+            type="button"
+            className="btn-start-studying-cta"
+            onClick={() => {
+              const params = { topic, subject: selectedSubject, duration: studyDuration };
+              if (onStartStudying) {
+                onStartStudying(params);
+              } else if (onNavigate) {
+                onNavigate('/extension');
+              } else {
+                window.history.pushState({}, '', '/extension');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }
+            }}
+          >
+            <span>Start Studying</span>
+            <span aria-hidden="true">&rarr;</span>
+          </button>
           
         </div>
       </div>
